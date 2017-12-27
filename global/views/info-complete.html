@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>完善资料</title>
+		<link rel="stylesheet" href="../css/mui.css">
+		<link rel="stylesheet" href="../css/base.css">
+		<link rel="stylesheet" href="../css/mui.picker.all.css">
+		<link rel="stylesheet" href="../css/info-complete.css">
+	</head>
+
+	<body>
+		<div id="info-complete">
+			<!--头部-->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" @tap="backPrev" v-show="!enterpriseInfoShow"><span>返回</span></a>
+				<h1 class="mui-title green">完善资料</h1>
+			</header>
+			<!--主体-->
+			<section class="mui-content">
+				<!--单位信息开始-->
+				<div id="enterprise_info" v-show="enterpriseInfoShow">
+					<p class="sub-title">单位信息</p>
+					<!--输入栏-->
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label for="belong_enterprise">所属企业</label>
+							<input id="belong_enterprise" type="text" class="mui-input-clear" placeholder="请输入" v-model.trim="belongEnterprise">
+						</div>
+						<div class="mui-input-row">
+							<label for="department">部<i class="space"></i>门</label>
+							<input id="department" type="text" class="mui-input-clear" placeholder="请输入" v-model.trim="department">
+						</div>
+						<div class="mui-input-row">
+							<label for="duty">职<i class="space"></i>务</label>
+							<input id="duty" type="text" class="mui-input-clear" placeholder="请输入" v-model.trim="duty">
+						</div>
+						<div class="mui-input-row">
+							<label for="job_number">工<i class="space"></i>号</label>
+							<input id="job_number" type="text" class="mui-input-clear" placeholder="请输入" v-model.trim="jobNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="tel_number">座<i class="space"></i>机</label>
+							<input id="tel_number" type="text" class="mui-input-clear" placeholder="请输入" v-model.trim="telNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="entry_time">入职时间</label>
+							<input id="entry_time" type="text" class="mui-input-clear" placeholder="请选择" readonly v-model="entryTime" @tap="chooseEntryTime">
+						</div>
+					</form>
+					<!--按钮-->
+					<div class="mui-content-padded">
+						<button class="mui-btn mui-btn-block mui-btn-green" @tap="toBasic">下一步</button>
+					</div>
+				</div>
+				<!--单位信息结束-->
+				<!--基本信息开始-->
+				<div id="basic_info" v-show="basicInfoShow">
+					<p class="sub-title">基本信息</p>
+					<!--输入栏-->
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label for="user_name">姓<i class="space"></i>名</label>
+							<input class="mui-input-clear" id="user_name" type="text" placeholder="请输入" v-model.trim="userName">
+						</div>
+						<div class="mui-input-row">
+							<label for="gender">性<i class="space"></i>别</label>
+							<input class="mui-input-clear" id="gender" type="text" placeholder="请选择" readonly v-model="gender" @tap="chooseGender">
+						</div>
+						<div class="mui-input-row">
+							<label for="phone_number">手机号码</label>
+							<input class="mui-input-clear" id="phone_number" type="number" pattern="\d*" placeholder="请输入" v-model.trim="phoneNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="birthday">出生日期</label>
+							<input class="mui-input-clear" id="birthday" type="text" placeholder="请选择" readonly v-model="birthday" @tap="chooseBirthday">
+						</div>
+						<div class="mui-input-row">
+							<label for="id_number">身份证号</label>
+							<input class="mui-input-clear" id="id_number" type="text" placeholder="请输入" v-model.trim="idNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="address">家庭住址</label>
+							<input class="mui-input-clear" id="address" type="text" placeholder="请输入" v-model.trim="address">
+						</div>
+						<div class="mui-input-row">
+							<label for="user_email">邮箱地址</label>
+							<input class="mui-input-clear" id="user_email" type="email" placeholder="请输入" v-model.trim="userEmail">
+						</div>
+					</form>
+					<!--按钮-->
+					<div class="mui-content-padded">
+						<button class="mui-btn mui-btn-block mui-btn-green mui-btn-outlined" @tap="toEnterprise">上一步</button>
+						<button class="mui-btn mui-btn-block mui-btn-green" @tap="toEducation">下一步</button>
+					</div>
+				</div>
+				<!--基本信息结束-->
+				<!--教育信息开始-->
+				<div id="education_info" v-show="educationInfoShow">
+					<p class="sub-title">教育信息</p>
+					<!--输入栏-->
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label for="qualification">学<i class="space"></i>历</label>
+							<input class="mui-input-clear" id="qualification" type="text" placeholder="请选择" readonly v-model="qualification" @tap="chooseQualification">
+						</div>
+						<div class="mui-input-row">
+							<label for="degree">学<i class="space"></i>位</label>
+							<input class="mui-input-clear" id="degree" type="text" placeholder="请输入" v-model="degree">
+						</div>
+						<div class="mui-input-row">
+							<label for="graduate_school">毕业院校</label>
+							<input class="mui-input-clear" id="graduate_school" type="text" placeholder="请输入" v-model="graduateSchool">
+						</div>
+						<div class="mui-input-row">
+							<label for="graduate_time">毕业时间</label>
+							<input class="mui-input-clear" id="graduate_time" type="text" placeholder="请选择" v-model="graduateTime" readonly @tap="chooseGraduateTime">
+						</div>
+						<div class="mui-input-row">
+							<label for="graduate_major">毕业专业</label>
+							<input class="mui-input-clear" id="graduate_major" type="text" placeholder="请输入" v-model="graduateMajor">
+						</div>
+					</form>
+					<!--按钮-->
+					<div class="mui-content-padded">
+						<button class="mui-btn mui-btn-block mui-btn-green mui-btn-outlined" @tap="toBasic">上一步</button>
+						<button class="mui-btn mui-btn-block mui-btn-green">保存信息</button>
+					</div>
+				</div>
+				<!--教育信息结束-->
+			</section>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/base.js"></script>
+		<script>
+			var infoComplete = new Vue({
+				el: "#info-complete",
+				data: function() {
+					return {
+						enterpriseInfoShow: true,
+						belongEnterprise: '',
+						department: '',
+						duty: '',
+						jobNumber: '',
+						telNumber: '',
+						entryTime: '',
+						basicInfoShow: false,
+						userName: '',
+						gender: '',
+						phoneNumber: '',
+						birthday: '',
+						idNumber: '',
+						address: '',
+						userEmail: '',
+						genderData: [{
+							value: 'male',
+							text: '男'
+						}, {
+							value: 'female',
+							text: '女'
+						}],
+						educationInfoShow: false,
+						qualification: '',
+						degree: '',
+						graduateSchool: '',
+						graduateTime: '',
+						graduateMajor: '',
+						qualificationData: [{
+							value: 'bachelor',
+							text: '本科'
+						}, {
+							value: 'postgraduate',
+							text: '研究生'
+						}, {
+							value: 'phd',
+							text: '博士'
+						}]
+					}
+				},
+				mounted: function() {
+					backControl();
+				},
+				methods: {
+					backPrev: function() {
+						if(this.basicInfoShow) {
+							this.toEnterprise();
+						} else if(this.educationInfoShow) {
+							this.toBasic();
+						}
+					},
+					toBasic: function() {
+						this.enterpriseInfoShow = false;
+						this.basicInfoShow = true;
+						this.educationInfoShow = false;
+					},
+					toEnterprise: function() {
+						this.enterpriseInfoShow = true;
+						this.basicInfoShow = false;
+					},
+					toEducation: function() {
+						this.basicInfoShow = false;
+						this.educationInfoShow = true;
+					},
+					chooseEntryTime: function() { //选择入职时间
+						var _this = this;
+						chooseTime("1900-01-01", "", function(date) {
+							_this.entryTime = date;
+						});
+					},
+					chooseGender: function() { //选择性别
+						var _this = this;
+						var genderPicker = new mui.PopPicker();
+						genderPicker.setData(_this.genderData);
+						genderPicker.show(function(items) {
+							_this.gender = items[0].text
+						})
+					},
+					chooseBirthday: function() { //选择生日时间
+						var _this = this;
+						chooseTime("1901-01-01", "", function(date) {
+							_this.birthday = date;
+						});
+					},
+					chooseQualification: function() {  //选择学历
+						var _this = this;
+						var qualificationPicker = new mui.PopPicker();
+						qualificationPicker.setData(_this.qualificationData);
+						qualificationPicker.show(function(items) {
+							_this.qualification = items[0].text
+						})
+					},
+					chooseGraduateTime: function() { //选择毕业时间
+						var _this = this;
+						chooseTime("1901-01-01", "2020-10-01", function(date) {
+							_this.birthday = date;
+						});
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

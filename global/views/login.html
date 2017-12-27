@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<title>登录</title>
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<link rel="stylesheet" href="../css/base.css" />
+		<link rel="stylesheet" href="../css/vue-component.css" />
+		<link rel="stylesheet" href="../css/login.css" />
+		<link rel="stylesheet" href="http://at.alicdn.com/t/font_504673_gd3o7vnlml4hd7vi.css" />
+	</head>
+
+	<body class="login-bg">
+
+		<div class="login login-content" id="main">
+
+			<h1 class="green">登录</h1>
+
+			<div class="mui-input-row login-input">
+				<label><i class="iconfont icon-shouji green"  v-drag.del></i></label>
+				<input type="number" v-model.trim="phone" placeholder="请输入手机号" v-validate:v1="phone">
+			</div>
+			<div class="mui-input-row login-input">
+				<label><i class="iconfont icon-mima green"></i></label>
+				<input type="password" v-model.trim="password" placeholder="请输入密码" v-validate:v2="password">
+			</div>
+
+			<oa-a tag="button" url="">登录</oa-a>
+
+			<div class="nav">
+				<ul>
+					<li>
+						<oa-a class="green" url="./register.html">注册账号</oa-a>
+					</li>
+					<li class="split">|</li>
+					<li>
+						<oa-a class="green" url="./forget-password.html">忘记密码</oa-a>
+					</li>
+				</ul>
+			</div>
+			
+			<div id="drag_del"></div>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/base.js"></script>
+		<script src="../js/vue-component.js"></script>
+		<script>
+			var login = new Vue({
+				el: '#main',
+				data: {
+					validation: {},
+					phone: '',
+					password: ''
+				}
+			})
+		</script>
+	</body>
+
+</html>

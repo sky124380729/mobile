@@ -1,0 +1,24 @@
+/* 验证码倒计时控件 */
+.btn-code {
+	position: absolute;
+	right: 10px;
+	top: 6px;
+	background-color: #5cad5a;
+	border: 1px solid #5cad5a;
+	padding: 4px;
+	color: #fff;
+}
+
+.btn-code:disabled{
+	background-color: #e3e2e2;
+	border-color: #e3e2e2;
+	color: #c3c3c3;
+}
+
+
+/* 跳转新页面按钮样式 */
+.oa-a {
+	display: block;
+	width: 100%;
+	height: 100%;
+}

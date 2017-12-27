@@ -1,0 +1,49 @@
+html,
+body {
+  min-height: 100%;
+}
+.login-bg {
+  background: url(../images/login.png) no-repeat fixed bottom;
+  background-size: 100%;
+  background-position: bottom;
+}
+.register-bg {
+  background: url(../images/register.png) no-repeat fixed bottom;
+  background-size: 100%;
+  background-position: bottom;
+}
+.login h1 {
+  margin: 50px;
+  font-size: 34px;
+  font-weight: normal;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+.login .mui-btn-green {
+  margin-top: 20px;
+}
+.login .nav {
+  overflow: hidden;
+  text-align: center;
+}
+.login .nav ul {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0;
+}
+.login .nav li {
+  float: left;
+  list-style: none;
+  font-size: 14px;
+}
+.login .nav li.split {
+  margin: 0 8px;
+}
+.login .tips {
+  text-align: center;
+  font-size: 10px;
+  color: #b5b5b5;
+}
+.login .go-login {
+  text-align: center;
+}

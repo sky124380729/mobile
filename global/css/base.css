@@ -1,0 +1,97 @@
+/* 公共样式重置 */
+
+body {
+	background-color: #fff;
+}
+
+a {
+	color: inherit;
+}
+a:active {
+	color: inherit;
+}
+
+/* 重置按钮样式*/
+
+input[type=button]:disabled {
+	background-color: #c3c3c3;
+	border: #c3c3c3;
+	opacity: 1;
+}
+
+.mui-btn:disabled {
+	background-color: #c3c3c3;
+	border: #c3c3c3;
+	opacity: 1;
+}
+
+.mui-btn-green {
+	border: 1px solid #5cad5a;
+	background-color: #5cad5a;
+}
+
+.mui-btn-block {
+	padding: 9px 0;
+}
+
+
+/* 返回按钮 */
+
+.return {
+	position: absolute;
+	top: 10px;
+	font-size: 1rem;
+	font-weight: 400;
+	font-family: 'Muiicons';
+	font-style: normal;
+	color: #595757;
+	letter-spacing: 0.1em;
+}
+.return .icon-fanhui{
+	font-weight: 700;
+}
+.return:active {
+	color: #595757;
+	opacity: 0.3;
+}
+
+
+/* 页面的颜色 */
+
+.green {
+	color: #5cad5a;
+}
+
+
+/* 登陆类页面的样式 */
+
+.login-content {
+	padding: 0 15px;
+}
+
+.login-input {
+	position: relative;
+	margin-bottom: 10px;
+	border: 1px solid #b5b5b6;
+	border-radius: 4px;
+}
+
+.login-input label {
+	width: 10%;
+	margin: 7px 0;
+	padding: 0 0 0 16px;
+}
+
+.login-input label .iconfont {
+	font-size: 22px;
+	color: #5cad5a;
+}
+
+.login-input label~input {
+	width: 85%;
+	font-size: 14px;
+}
+
+.login-input label~input::-webkit-input-placeholder {
+	color: #b5b5b6;
+}

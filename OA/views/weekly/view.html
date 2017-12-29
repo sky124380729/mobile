@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>日常工作查看</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<link rel="stylesheet" href="../../css/oa.css" />
+		<style>
+			.mui-content {
+				background: #fff;
+			}
+			
+			ul,
+			li {
+				padding: 0;
+				list-style: none;
+			}
+			
+			.mui-bar {
+				line-height: 40px;
+				background: #fff;
+				box-shadow: none;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.mui-bar .back-text {
+				font-size: 1rem;
+				position: relative;
+				top: -1px;
+			}
+			/* card样式 */
+			
+			.mui-card-header>img:first-child {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				margin-right: 0.5rem;
+			}
+			
+			.mui-card-header h5 {
+				font-size: 1rem;
+				font-weight: normal;
+				color: #000;
+			}
+			/* 内容样式 */
+			
+			.mui-input-group:before {
+				content: none;
+			}
+			
+			.mui-input-row {
+				padding: 0 15px;
+				height: auto!important;
+			}
+			
+			.mui-input-row h6 {
+				margin: 12px 0;
+			}
+			
+			.mui-input-row p {
+				line-height: 26px;
+				color: #000;
+				font-size: 1rem;
+			}
+			/* 底部样式 */
+			
+			.mui-bar-footer {
+				height: 75px;
+				border: none;
+				padding: 0 2rem;
+				text-align: center;
+				line-height: 75px;
+				background: #f5f5f5;
+			}
+			
+			.mui-bar-footer a {
+				display: inline-block;
+				width: 62px;
+				height: 62px;
+				line-height: 62px;
+				color: #5cad5a;
+				border-radius: 50%;
+				background: #F5F5F5;
+			}
+			
+			.mui-bar-footer a:active {
+				background: #e5e5e5;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="work_task_view">
+			<!--头部-->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="back-text">返回</span></a>
+				<h1 class="mui-title green">查看工作任务</h1>
+			</header>
+
+			<section class="mui-content" style="margin-bottom: 200px;">
+
+				<div class="mui-card-header mui-card-media">
+					<img src="../../images/user-head_03.png">
+					<div class="mui-media-body">
+						<h4>{{model.createName}}</h4>
+						<h6>2017-10-10</h6>
+					</div>
+				</div>
+
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<h6>任务名称</h6>
+						<p>{{model.name}}</p>
+					</div>
+					<div class="mui-input-row">
+						<h6>任务类型</h6>
+						<p>{{model.startTime}}</p>
+					</div>
+					<div class="mui-input-row">
+						<h6>开始时间</h6>
+						<p>{{model.startTime}}</p>
+					</div>
+					<div class="mui-input-row">
+						<h6>结束时间</h6>
+						<p>{{model.endTime}}</p>
+					</div>
+					<div class="mui-input-row">
+						<h6>工作状态</h6>
+						<p>{{model.state}}</p>
+					</div>
+					<div class="mui-input-row">
+						<h6>任务描述</h6>
+						<p v-html="model.desc"></p>
+					</div>
+					<div class="mui-input-row">
+						<h6>备注</h6>
+						<p>{{model.remark}}</p>
+					</div>
+					<div class="mui-input-row">
+						<h4 class="image-title">负责人</h4>
+						<div class="image-list">
+							<div class="image-item">
+								<div class="image-up"><img :src="model.fzrtx"></div>
+								<p>{{model.fzrmc}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mui-input-row">
+						<h4 accesskey="image-title">参与人</h4>
+						<div class="image-list">
+							<div class="image-item" v-for="member in model.listCyr">
+								<div class="image-up"><img :src="member.cyrtx"></div>
+								<p>{{member.cyrmc}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="mui-input-row">
+						<h4 class="image-title">抄送人</h4>
+						<div class="image-list">
+							<div class="image-item" v-for="member in model.listCsr">
+								<div class="image-up"></div>
+								<p>{{member.cyrmc}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="mui-bar mui-bar-footer">
+				<div class="mui-row">
+					<div class="mui-col-xs-4 mui-text-center">
+						<a class="" @tap="modifyTaskWork"><i class="iconfont icon-xiugai"></i>修改</a>
+					</div>
+					<div class="mui-col-xs-4 mui-text-center">
+						<a class="" @tap="copyTaskWork"><i class="iconfont icon-xiugai"></i>复制</a>
+					</div>
+					<div class="mui-col-xs-4 mui-text-center">
+						<a class="" @tap="deleteTaskWork"><i class="iconfont icon-xiugai"></i>删除</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../../common/js/mui.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script>
+			var viewTaskWork = new Vue({
+				el: '#work_task_view',
+				data: function() {
+					return {
+						id: '',
+						model: {
+							listCyr: [],
+							listCsr: []
+						}
+					}
+				},
+				mounted: function() {
+					this.id = findParamFromUrl('id');
+					this.getTaskWork(this.id);
+				},
+				methods: {
+					getTaskWork: function(id) {
+						var _this = this;
+						mui.myAjax({
+							url: CONSTANT.baseUrl + 'mobile/workTask/get/' + id,
+							type: 'GET',
+							success: function(res) {
+								if(res && res.success) {
+									_this.model.name = res.data.rwmc;
+									_this.model.startTime = res.data.kssj;
+									_this.model.endTime = res.data.jssj;
+									_this.model.stateId = res.data.gzzt;
+									for(var i = 0; i < stateData.length; i++) { //根据状态id显示对应的状态名
+										if(stateData[i].value == res.data.gzzt) {
+											_this.model.state = stateData[i].text;
+										}
+									}
+									_this.model.desc = res.data.nwms;
+									_this.model.remark = res.data.bz;
+									_this.model.createName = res.data.creatername;
+									_this.model.fzrtx = res.data.fzrtx;
+									_this.model.fzrmc = res.data.fzrmc;
+									_this.model.listCyr = res.data.listCyr;
+								}
+							}
+						})
+					},
+					modifyTaskWork: function() {
+						mui.openWindow({
+							url: "modify-task.html?handle=modify&id=45",
+							createNew: true,
+							show: {
+								aniShow: 'slide-in-right'
+							}
+						});
+					},
+					copyTaskWork: function() {
+						mui.toast('不知道怎么复制')
+					},
+					deleteTaskWork: function() {
+						var _this = this;
+						mui.myAjax({
+							url: CONSTANT.baseUrl + 'mobile/workTask/delete/' + _this.id,
+							type: 'GET',
+							success: function(res) {
+								if(res && res.success) {
+									mui.toast('删除成功！')
+									setTimeout(function() {
+										mui.openWindow({
+											url: "list.html"
+										});
+									}, 1000);
+								} else {
+									mui.toast(res.message);
+								}
+							}
+						})
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>查看工作计划</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<style>
+			.mui-content {
+				background: #fff;
+			}
+			
+			ul,
+			li {
+				padding: 0;
+				list-style: none;
+			}
+			
+			.mui-bar {
+				line-height: 40px;
+				background: #fff;
+				box-shadow: none;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.mui-bar .back-text {
+				font-size: 1rem;
+				position: relative;
+				top: -1px;
+			}
+			/* card样式 */
+			.mui-card-header>img:first-child {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				margin-right: 0.5rem;
+			}
+			.mui-card-header h5 {
+				font-size: 1rem;
+				font-weight: normal;
+				color: #000;
+			}
+			/* 内容样式 */
+			
+			.mui-input-group:before {
+				content: none;
+			}
+			
+			.mui-input-row {
+				padding: 0 15px;
+				height: auto!important;
+			}
+			
+			.mui-input-row h6 {
+				margin: 12px 0;
+			}
+			
+			.mui-input-row p {
+				line-height: 26px;
+				color: #000;
+				font-size: 1rem;
+			}
+			/* 底部样式 */
+			
+			.mui-bar-footer {
+				height: 75px;
+				border: none;
+				padding: 0 2rem;
+				text-align: center;
+				line-height: 75px;
+				background: #f5f5f5;
+			}			
+			.mui-bar-footer .iconfont {
+				font-size: 18px;
+			}			
+			.mui-bar-footer a {
+				display: inline-block;
+				margin-top: 6px;
+				padding-top: 11px;
+				width: 62px;
+				height: 62px;
+				line-height: 20px;
+				font-size: 14px;
+				color: #5cad5a;
+				border-radius: 50%;
+				background: #F5F5F5;
+			}			
+			.mui-bar-footer a:active {
+				background: #e5e5e5;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="view_work_plan">
+			<!--头部-->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="back-text">返回</span></a>
+				<h1 class="mui-title green">查看工作计划</h1>
+			</header>
+
+			<section class="mui-content">
+
+				<div class="mui-card-header mui-card-media">
+					<img src="../../images/user-head_03.png">
+					<div class="mui-media-body">
+						<h4 v-text='createName'></h4>
+						<h6 v-text='createTime'></h6>
+					</div>
+				</div>
+
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<h6>计划名称</h6>
+						<p v-text='planName'></p>
+					</div>
+					<div class="mui-input-row">
+						<h6>开始时间</h6>
+						<p v-text='startTime'></p>
+					</div>
+					<div class="mui-input-row">
+						<h6>结束时间</h6>
+						<p v-text='endTime'></p>
+					</div>
+					<div class="mui-input-row">
+						<h6>工作状态</h6>
+						<p v-text='workState'></p>
+					</div>
+					<div class="mui-input-row">
+						<h6>工作描述</h6>
+						<p v-text='planDescription'></p>
+					</div>
+					<div class="mui-input-row">
+						<h6>备注</h6>
+						<p v-text='remark'></p>
+					</div>
+				</div>
+			</section>
+
+			<div class="mui-bar mui-bar-footer">
+				<div class="mui-row">
+					<div class="mui-col-xs-4 mui-text-center">
+						<a class="" @tap="modifyWorkPlan"><i class="iconfont icon-edit"></i>修改</a>
+					</div>
+					<div class="mui-col-xs-4 mui-text-center">
+						<a class="" @tap="copyWorkPlan"><i class="iconfont icon-copy"></i>复制</a>
+					</div>
+					<div class="mui-col-xs-4 mui-text-center">
+						<a class="" @tap="deleteWorkPlan"><i class="iconfont icon-delete"></i>删除</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../../common/js/mui.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script>
+			/*function findParamFromUrl(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); // 构造一个含有目标参数的正则表达式对象
+				var r = window.location.search.substr(1).match(reg); // 匹配目标参数
+				if(r != null)
+					return unescape(r[2]);
+				return null; // 返回参数值
+			}*/
+			var checkDailyWork = new Vue({
+				el: '#view_work_plan',
+				data: function() {
+					return {
+						createName: '',
+						createTime: '',
+						planName: '',
+						startTime: '',
+						endTime: '',
+						workState: '',
+						workStateData: [{
+							value: '',
+							text: '请选择'
+						}, {
+							value: '0',
+							text: '未开始'
+						}, {
+							value: '1',
+							text: '进行中'
+						}, {
+							value: '2',
+							text: '已完成'
+						}],
+						workStateId: '',
+						planDescription: '',
+						remark: '',
+						planWorkId: findParamFromUrl('id'),
+						submitState: ''
+					}
+				},
+				mounted: function() {
+					this.getWorkPlan();
+				},
+				methods: {
+					getWorkPlan: function() {
+						var _this = this;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/gzjh/get?id=' + _this.planWorkId, {
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							type: 'get',
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if(data && data.success) {
+									_this.planName = data.data.jhmc;
+									_this.startTime = data.data.kssj;
+									_this.endTime = data.data.jssj;
+									_this.workStateId = data.data.gzzt;
+									for(var i = 0; i < _this.workStateData.length; i++) { //根据状态id显示对应的状态名
+										if(_this.workStateData[i].value == data.data.gzzt) {
+											_this.workState = _this.workStateData[i].text;
+										}
+									}
+									_this.planDescription = data.data.gznr;
+									_this.remark = data.data.bz;
+									_this.createName = data.data.creatername;
+									_this.createTime = data.data.createtime;
+									_this.submitState = data.data.tjzt;
+								} else {
+									mui.toast(data.message);
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						})
+					},
+					//修改
+					modifyWorkPlan: function() {
+						var _this = this;
+						mui.openWindow({
+							url: "work-plan-add-modify.html?handle=modify&id=" + _this.planWorkId,
+							createNew: true,
+							show: {
+								aniShow: 'slide-in-right'
+							}
+						});
+					},
+					//复制
+					copyWorkPlan: function() {
+						var _this = this;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/gzjh/addorupdate', {
+								data: {
+									jhmc: _this.planName,
+									kssj: _this.startTime,
+									jssj: _this.endTime,
+									gzzt: _this.workStateId,
+									gznr: _this.planDescription,
+									bz: _this.remark,
+									tjzt: _this.tjzt
+								},
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								type: 'POST',
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									if(data && data.success) {
+										mui.toast('复制新增成功！');
+										/*mui.plusReady(function(){
+											plus.nativeUI.showWaiting();
+											setTimeout(function(){
+												plus.nativeUI.closeWaiting();
+											},1000)
+										})*/
+										mui.back();
+									}else{
+										mui.toast(data.message);
+									}
+								},
+								error:function(xhr, type, errorThrown) {
+									mui.toast(errorThrown);
+								}
+							})
+					},
+					//删除
+					deleteWorkPlan: function() {
+						mui.ajax(CONSTANT.baseUrl + 'mobile/gzjh/delete/plan?id=' + _this.planWorkId, {
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							type: 'GET',
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if(data && data.success) {
+									mui.toast('删除成功！');
+									mui.back();
+								} else {
+									mui.toast(data.message);
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						})
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

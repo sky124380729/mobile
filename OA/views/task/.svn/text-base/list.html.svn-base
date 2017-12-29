@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>工作任务</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/css/mui.picker.all.css" />
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<link rel="stylesheet" href="../../css/oa.css" />
+	</head>
+
+	<body>
+		<div id="myTask">
+			<!--头部-->
+			<oa-header title='工作任务' url='modify-task.html'></oa-header>
+
+			<section class="mui-content">
+
+				<!-- 列表区 -->
+				<div class="list-box">
+
+					<oa-tab :nav="['全部','我发起的','我负责的','我参与的','抄送我的']" :iconnav="['icon-xiaoxi','icon-xiaoxi','icon-xiaoxi','icon-xiaoxi','icon-xiaoxi']" :bar="true" :scroll="true">
+						<oa-searchbar slot="bar"></oa-searchbar>
+						<oa-list :items="tab1" :info.sync="tab1.list" slot="0">
+							<task-list :items="tab1"></task-list>
+						</oa-list>
+
+						<oa-list :items="tab2" :info.sync="tab2.list" slot="1">
+							<task-list :items="tab2"></task-list>
+						</oa-list>
+
+					</oa-tab>
+				</div>
+
+			</section>
+
+		</div>
+
+		<script src="../../../common/js/mui.min.js"></script>
+		<script src="../../../common/js/mui.picker.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script src="../../../common/js/mui.pullToRefresh.js"></script>
+		<script src="../../../common/js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/oa-components3.js"></script>
+		<script type="text/javascript">
+			Vue.component('task-list', {
+				template: `
+		<ul class="oa-list mui-table-view">
+			<li class="list-item" @tap="goView(item.id)" v-longtap="{fn:showModal,index:index}" v-for="(item,index) in items.list" :key="item.id">
+				<div class="mui-card-header mui-card-media">
+					<div class="circle"><img :src="'http://dl.sdusz.com.cn/'+item.tx"></div>				
+					<div class="mui-media-body">
+						<h4>	{{item.creatername}}<i class="iconfont icon-sousuo"></i>
+	                			<a v-if="item.gzzt == 0" class="list-item-sign">未开始</a>
+	                			<a v-if="item.gzzt == 1" class="list-item-sign red">进行中</a>
+	                			<a v-if="item.gzzt == 2" class="list-item-sign green">已完成</a>
+	                		</h4>
+						<h6>{{item.createtime}}</h6>
+					</div>
+				</div>
+				<div class="mui-card-content">
+					<h4>{{item.gzmc}}</h4>
+					<p><label>开始时间：</label><span>{{item.kssj}}</span></p>
+					<p><label>结束时间：</label><span>{{item.jssj}}</span></p>
+				</div>
+				<div class="list-modal" v-show="modalIndex === index" @tap="modalIndex=-1">
+					<a class="copy-btn" @tap.stop="">复制</a>
+				</div>
+			</li>
+		</ul>
+	`,
+				props: ['items'],
+				data: function() {
+					return {
+						//modal显示
+						modalIndex: -1,
+					}
+				},
+				methods: {
+					//显示蒙层
+					showModal(obj) {
+						this.modalIndex = obj.index;
+					},
+					goView: function(id) {
+						mui.openWindow({
+							url: "view.html?id=" + id
+						});
+					}
+				}
+			})
+			var taskList = new Vue({
+				el: '#myTask',
+				data: {
+					//tab列表数据
+					tab1: {
+						api: {
+							url: CONSTANT.baseUrl + 'mobile/workTask/findList',
+							type: 'POST',
+							data: {}
+						},
+						list: []
+					},
+					tab2: {
+						api: {
+							url: CONSTANT.baseUrl + 'mobile/workTask/findList',
+							type: 'POST',
+							data: {
+								gzlx: 1
+							}
+						},
+						list: []
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

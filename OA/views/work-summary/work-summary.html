@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>工作纪要</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../css/oa.css">
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<link rel="stylesheet" href="../../../common/css/mui.picker.all.css">
+		<style>
+			/* panal中的li */
+			
+			.filter-panel .filter-item {
+				float: left;
+			}
+			
+			.mui-control-item:first-child .front-space,
+			.mui-control-item:last-child .end-space {
+				display: inline-block;
+				width: 2.5rem;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div id="daily_work">
+			<!--头部-->
+			<oa-header title='工作纪要' url='work-summary-add-modify.html'></oa-header>
+			<!--主体部分-->
+			<section class="mui-content">
+				<!--非领导查看-->
+				<div class="list-box">
+					<section class="mui-content">
+						<!--搜索筛选部分-->
+						<oa-searchbar :search-data.sync='searchData'></oa-searchbar>
+						<!--列表-->
+						<oa-list :items="tab1" :info.sync="tab1.list" slot="0" style="top:94px">
+							<dailywork-list :items="tab1" :tx='tx'></dailywork-list>
+						</oa-list>
+					</section>
+				</div>
+			</section>
+		</div>
+
+		<script src="../../../common/js/mui.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script src="../../../common/js/mui.picker.min.js"></script>
+		<script src="../../../common/js/mui.pullToRefresh.js"></script>
+		<script src="../../../common/js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/oa-components.js"></script>
+		<script>
+			/* tab切换父组件 */
+			Vue.component('oa-tab', {
+				props: {
+					//导航菜单数组
+					nav: {
+						required: true,
+						type: Array
+					},
+					//导航条是否可以滚动
+					scroll: {
+						type: Boolean,
+						default: false
+					},
+					iconnav: {
+						type: Array
+					},
+					navVal: {
+
+					}
+				},
+				template: `
+							<div class="mui-slider mui-fullscreen">
+								<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+									<div :class="scroll?'mui-scroll':'tab-nav-item'">
+										<a v-for="(item,index) in nav" class="mui-control-item" :class="{'mui-active':index===0}" :href="'#tab'+index" @tap="getVal(item.value)">
+											<i class="iconfont"></i> <i class="front-space"></i>{{item.text}}<i class="end-space"></i>
+										</a>
+									</div>
+								</div>
+								
+								<slot name="bar"></slot>
+								
+								<div class="mui-slider-group" ref="sliderGroup"> 
+									<div v-for="(item,index) in nav" :id="'tab'+index" class="mui-slider-item mui-control-content">
+										<slot :name="index"></slot>
+										<slot>
+											<div class="noData mui-text-center">
+												暂无数据
+											</div>	
+										</slot>
+									</div>
+								</div>
+							</div>
+				`,
+				mounted: function() {
+
+				},
+				methods: {
+					getVal: function(val) {
+						this.$emit('update:navVal', val);
+					}
+				}
+			});
+			/* 搜索筛选组件 */
+			Vue.component('oa-searchbar', {
+				props: ["searchData"],
+				template: `<div>
+							<div class="mask" v-if="searchContent"></div>
+							<div class="search-bar mui-text-center mui-clearfix">
+								<!--搜索操作-->
+								<template v-if="searchContent">
+									<form class="search-box">
+										<input @keyup.13.prevent="search" type="search" v-model.trim='keyword' placeholder="搜索标题/正文内容">
+										<!--防止提交的解决方案-->
+										<input type="text" style="display: none;">
+										<a @tap="searchContent = false;canScroll()" href="javascript:void(0);" class="cancel">取消</a>
+									</form>
+								</template>
+								<template v-else>
+									<div @tap="searchContent = true;noScroll()" class="search-bar-item">
+										<i class="iconfont icon-sousuo"></i> 搜索
+									</div>
+									<div @tap="filter = true;noScroll();" class="search-bar-item"><i class="iconfont icon-shaixuan"></i> 筛选</div>
+								</template>
+								<!-- 筛选操作 -->
+								<div class="mui-backdrop" @tap.self="filter = false;canScroll()" v-if="filter">
+									<div class="filter-panel">
+										
+										
+										<div class="row-head">
+											开始时间
+										</div>
+										<div class="row-body">
+											<div ref="startTime" class="filter-item filter-block filter-date" @tap="chooseTime">{{time}}</div>
+										</div>
+										<div class="row-foot">
+											<div class="foot-btn reset" @tap="reset">重置</div>
+											<div class="foot-btn finish" @tap="finish">完成</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>`,
+				data: function() {
+					return {
+						searchContent: false,
+						keyword: '',
+						tjzt: '',
+						filter: false,
+						num: -1,
+						time: '请选择'
+					}
+				},
+				mounted: function() {
+
+				},
+				methods: {
+					getId: function(d, index, event) {
+						if(index == 0) {
+							this.ssbm = this.searchData.filterList[index].subs[d].value;
+						} else if(index == 1) {
+							this.gzzt = this.searchData.filterList[index].subs[d].value;
+						} else {
+							this.tjzt = this.searchData.filterList[index].subs[d].value;
+						}
+						this.searchData.filterList[index].index = d;
+						console.log(this.searchData)
+						console.log("筛选", this.ssbm, this.gzzt, this.tjzt);
+					},
+					//阻止滚动
+					noScroll: function() {
+						document.documentElement.classList.add('noscroll');
+						document.body.classList.add('noscroll');
+					},
+					//解除阻止滚动
+					canScroll: function() {
+						document.documentElement.classList.remove('noscroll');
+						document.body.classList.remove('noscroll');
+					},
+					//重置
+					reset: function() {
+						this.time = '请选择';
+					},
+					//完成
+					finish: function() {
+						this.filter = false;
+						this.searchData.ssbm = this.ssbm;
+						this.searchData.gzzt = this.gzzt;
+						this.searchData.tjzt = this.tjzt;
+						this.searchData.time = this.time;
+						console.log(this.searchData)
+					},
+					//执行搜索
+					search: function(e) {
+						var _this = this;
+						_this.searchContent = false;
+						_this.searchData.searchWord = _this.keyword;
+						_this.keyword = ''
+						/*_this.$emit("update:gzmc",_this.keyword);*/
+					},
+					//选择时间
+					chooseTime: function() {
+						var _this = this;
+						var timePicker = new mui.DtPicker({
+							"type": "date",
+							"beginYear": 1911,
+							"endYear": 2017
+						});
+						timePicker.show(function(rs) {
+							_this.time = rs.text;
+							timePicker.dispose();
+							timePicker = null;
+						});
+					}
+				}
+			})
+			/* 列表外壳组件 */
+			Vue.component("oa-list", {
+				props: {
+					//存放api的tab数据(需传入api对象)
+					items: {
+						required: true,
+					},
+					//存放数据的站位空间(用来父子组件通信)
+					info: {
+						required: true
+					}
+				},
+				template: ` <div class="mui-content mui-scroll-wrapper">
+				                <div ref="scroll" class="mui-scroll">
+				                    <slot></slot>
+				                </div>
+			            	</div>`,
+				data: function() {
+					return {
+						page: 1
+					}
+				},
+				created: function() {
+					var _this = this;
+					_this.getList(1);
+				},
+				mounted: function() {
+					var _this = this;
+					mui(_this.$el).scroll({ //不显示滚动条
+						indicators: false
+					});
+					_this.$nextTick(function() {
+
+						mui(_this.$refs.scroll).pullToRefresh({
+							down: {
+								callback: function() {
+									var _self = this;
+									_this.getList(1);
+									_this.page = 1;
+									//重置控件，防止不能上拉加载
+									_self.refresh(true);
+									setTimeout(function() {
+										_self.endPullDownToRefresh();
+									}, 800);
+									console.log(_this.page)
+								}
+							},
+							up: {
+								show: false,
+								callback: function() {
+									var _self = this;
+									_this.page++;
+									if(_this.page > _this.totalPage) {
+										setTimeout(function() {
+											_self.endPullUpToRefresh(true);
+										}, 200);
+										return;
+									} else {
+										_this.getList(_this.page);
+										setTimeout(function() {
+											_self.endPullUpToRefresh(false);
+										}, 1000);
+									}
+									console.log(_this.page)
+								}
+							}
+						});
+					})
+				},
+				computed: {
+					gzmc: function() {
+						return this.items.api.data.gzmc;
+					},
+					tjzt: function() {
+						return this.items.api.data.tjzt;
+					},
+					gzzt: function() {
+						return this.items.api.data.gzzt;
+					}
+				},
+				watch: {
+					gzmc: function() {
+						this.getList(1);
+					},
+					tjzt: function() {
+						this.getList(1);
+					},
+					gzzt: function() {
+						this.getList(1);
+					}
+				},
+				methods: {
+					getList: function(page) {
+						var _this = this;
+						var _api = _this.items.api;
+						//处理get请求
+						if(_api.type.toUpperCase() === 'GET') {
+							var newApi = _api.url.indexOf('?') === -1 ?
+								_api.url + `?page=${page}` :
+								_api.url + `&page=${page}`
+							mui.ajax(newApi, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'GET', //HTTP请求类型
+								async: _api.async || true,
+								timeout: _api.timeout || 10000, //超时时间设置为10秒；
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								success: function(data) {
+									if(data.success) {
+										_this.totalPage = data.data.page.totalPage;
+										if(page === 1) {
+											_this.$emit("update:info", data.data.records);
+										} else {
+											_this.$emit("update:info", _this.info.concat(data.data.records))
+										}
+									} else {
+										mui.toast(data.message);
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									mui.toast('请求失败')
+								}
+							})
+						}
+						//处理post请求
+						else if(_api.type.toUpperCase() === 'POST') {
+							mui.ajax(_api.url, {
+								data: Object.assign({}, {
+									page: page || 1
+								}, _api.data),
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								async: _api.async || true,
+								timeout: _api.timeout || 10000, //超时时间设置为10秒；
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								success: function(data) {
+									if(data.success) {
+										_this.totalPage = data.data.page.totalPage;
+										if(page === 1) {
+											_this.$emit("update:info", data.data.records);
+										} else {
+											_this.$emit("update:info", _this.info.concat(data.data.records))
+										}
+									} else {
+										mui.toast(data.message)
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									mui.toast('请求失败');
+								}
+							})
+						}
+					}
+				}
+			});
+			// 日常工作列表项组件
+			var dailyListItem = {
+				props: ['items', 'tx'],
+				template: `
+							<ul class="oa-list mui-table-view">
+								<li class="list-item" v-for="(item,index) in items.list"  @tap="goDetail(item.id)" v-longtap="{fn:showModal,index:index}" :key="item.id">
+										<div class="mui-card-header mui-card-media">
+											<img :src="tx">
+											<div class="mui-media-body">
+												<h4>
+		                                    	{{item.creatername}}
+		                                    	<a v-if="item.gzzt == 0 " class="list-item-sign">未开始</a>
+		                                    	<a v-if="item.gzzt == 1 " class="list-item-sign red">进行中</a>
+		                                    	<a v-if="item.gzzt == 2 " class="list-item-sign green">已完成</a>
+		                                    </h4>
+												<h6>{{item.createtime | cutDot}}</h6>
+											</div>
+										</div>
+										<div class="mui-card-content">
+											<h4>{{item.gzmc}}</h4>
+											<p><label>开始时间：</label><span>{{item.kssj}}</span></p>
+											<p><label>结束时间：</label><span>{{item.jssj}}</span></p>
+											<p><label>关键词：</label><span>{{item.gjc}}</span></p>
+										</div>
+										<div class="list-modal" v-show="modalIndex == index" @tap="modalIndex=-1">
+											<a class="copy-btn" @tap.stop="copyDailyWork(index)">复制</a>
+										</div>
+								</li>
+							</ul>
+						`,
+				data: function() {
+					return {
+						//modal显示
+						modalIndex: -1,
+					}
+				},
+				filters: {
+					cutDot: function(value) {
+						return value.split('.')[0];
+					}
+				},
+				methods: {
+					showModal: function(obj) { //显示蒙层
+						this.modalIndex = obj.index;
+					},
+					goDetail: function(id) {
+						mui.openWindow({
+							url: "daily-work-check.html?id=" + id,
+							createNew: true,
+							show: {
+								aniShow: 'slide-in-right'
+							}
+						})
+					},
+					copyDailyWork: function(i) {
+						var _this = this;
+						console.log(_this.items.list[i])
+						mui.ajax(CONSTANT.baseUrl + 'mobile/routine/self/save', {
+							data: {
+								gzmc: _this.items.list[i].gzmc,
+								kssj: _this.items.list[i].kssj,
+								jssj: _this.items.list[i].jssj,
+								gzzt: _this.items.list[i].gzzt,
+								nwms: _this.items.list[i].nwms,
+								bz: _this.items.list[i].bz,
+								tjzt: _this.items.list[i].tjzt
+							},
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							type: 'POST',
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if(data && data.success) {
+									mui.toast('复制新增成功！');
+									/*mui.plusReady(function(){
+										plus.nativeUI.showWaiting();
+										setTimeout(function(){
+											plus.nativeUI.closeWaiting();
+										},1000)
+									})*/
+									setTimeout(function() {
+										window.location.reload();
+									}, 1000)
+								} else {
+									mui.toast(data.message);
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						})
+					},
+				}
+			};
+		</script>
+		<script>
+			/* 日常工作vue实例 */
+			var dailyWork = new Vue({
+				el: "#daily_work",
+				data: function() {
+					return {
+						navVal: 'mydaily',
+						tx: '../../images/user-head_03.png',
+						searchData: {
+							searchWord: '',
+							time: '请选择',
+							tjzt: '',
+							gzzt: '',
+							ssbm: '',
+							isShowFilter: [false, true, true]
+						},
+						//tab列表数据
+						tab1: {
+							api: {
+								url: CONSTANT.baseUrl + '/mobile/routine/self/find',
+								type: 'POST',
+								data: {
+									gzmc: '',
+									gzzt: '',
+									tjzt: '',
+									ssbm: '',
+									minstart: '',
+									maxstart: '',
+									minend: '',
+									maxend: ''
+								},
+								async: false
+							},
+							list: []
+						},
+						tab2: {
+							api: {
+								url: CONSTANT.baseUrl + '/mobile/routine/self/find',
+								type: 'POST',
+								data: {
+									gzmc: '',
+									gzzt: '',
+									tjzt: '',
+									ssbm: '',
+									maxstart: '',
+									minend: '',
+									maxend: ''
+								},
+								async: false
+							},
+							list: []
+						}
+					}
+				},
+				computed: {
+					searchWord: function() {
+						return this.searchData.searchWord;
+					},
+					tjzt: function() {
+						return this.searchData.tjzt;
+					},
+					gzzt: function() {
+						return this.searchData.gzzt;
+					},
+					ssbm: function() {
+						return this.searchData.ssbm;
+					}
+				},
+				watch: {
+					navVal: function(val, oldval) {
+						if(val === 'depdaily') {
+							return this.searchData.isShowFilter = [true, true, false];
+						} else if(val === 'mydaily') {
+							return this.searchData.isShowFilter = [false, true, true];
+						}
+					},
+					searchWord: function(searchWord) {
+						if(this.navVal == 'mydaily') {
+							this.tab1.api.data.gzmc = searchWord;
+						} else {
+							this.tab2.api.data.gzmc = searchWord;
+						}
+					},
+					tjzt: function(tjzt) {
+						if(this.navVal == 'mydaily') {
+							this.tab1.api.data.tjzt = tjzt;
+						} else {
+							this.tab2.api.data.tjzt = tjzt;
+						}
+					},
+					gzzt: function(gzzt) {
+						if(this.navVal == 'mydaily') {
+							this.tab1.api.data.gzzt = gzzt;
+						} else {
+							this.tab2.api.data.gzzt = gzzt;
+						}
+					},
+					ssbm: function(ssbm) {
+						if(this.navVal == 'mydaily') {
+							this.tab1.api.data.ssbm = ssbm;
+						} else {
+							this.tab2.api.data.ssbm = ssbm;
+						}
+					}
+				},
+				mounted: function() {
+
+				},
+				methods: {
+					isLeader: function() {
+						var _this = this;
+						var leader;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/routine/department/ishidden', {
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							type: 'get',
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if(data && data.success) {
+									leader = data.data;
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						});
+						return leader
+					},
+
+				},
+				components: {
+					'dailywork-list': dailyListItem
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,49 @@
+/**
+ * Created by lupn on 2017/12/12.  前端公共配置
+ */
+
+
+/* 控制返回键退出应用  */
+function backControl() {
+	mui.plusReady(function() {
+		var backButtonPress = 0;
+		mui.back = function(event) {
+			backButtonPress++;
+			if(backButtonPress > 1) {
+				plus.runtime.quit();
+			} else {
+				plus.nativeUI.toast('再按一次退出应用');
+			}
+			setTimeout(function() {
+				backButtonPress = 0;
+			}, 1000);
+			return false;
+		};
+	})
+}
+
+/* 选择时间 */
+function chooseTime(min_date, max_date, confirmFun, cancelFun) {
+	var dDate = new Date(); //当前日期
+	var minDate = new Date(min_date || '1900-01-01');
+	var maxDate = new Date(max_date || dDate);
+	var choosedDate;
+	mui.plusReady(function() {
+		plus.nativeUI.pickDate(function(e) {
+			var d = e.date;
+			choosedDate = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+			confirmFun(choosedDate, e);
+		}, function(e) {
+			if(typeof(cancelFun) != 'function') {
+				choosedDate = "";
+			} else {
+				cancelFun(e);
+			}
+		}, {
+			title: "请选择日期",
+			date: dDate,
+			minDate: minDate,
+			maxDate: maxDate
+		});
+	});
+}

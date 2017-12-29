@@ -1,0 +1,21 @@
+@charset "utf-8";
+.login-content {
+  padding: 0 15px;
+}
+.login-input {
+  margin-bottom: 10px;
+  border: 1px solid #7d7d7d;
+  border-radius: 4px;
+}
+.login-input label {
+  width: 10%;
+  margin: 7px 0;
+  padding: 0 0 0 7px;
+}
+.login-input label .iconfont {
+  font-size: 22px;
+}
+.login-input label ~ input {
+  width: 85%;
+  font-size: 14px;
+}

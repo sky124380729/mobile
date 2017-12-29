@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<title>登录</title>
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<link rel="stylesheet" href="../css/base.css" />
+		<link rel="stylesheet" href="../css/vue-component.css" />
+		<link rel="stylesheet" href="../css/login.css" />
+		<link rel="stylesheet" href="../iconfont/iconfont.css" />
+	</head>
+
+	<body class="login-bg">
+
+		<div class="login login-content" id="main">
+
+			<h1 class="green">登录</h1>
+
+			<div class="mui-input-row login-input">
+				<label><i class="iconfont icon-shouji green"></i></label>
+				<input type="number" v-model.trim="phone" placeholder="请输入手机号">
+			</div>
+			<div class="mui-input-row login-input">
+				<label><i class="iconfont icon-mima green"></i></label>
+				<input type="password" v-model.trim="password" placeholder="请输入密码">
+			</div>
+
+			<oa-button @tap.native="goLogin">登录</oa-button>
+
+			<div class="nav">
+				<ul>
+					<li>
+						<oa-a class="green" url="./register.html">注册账号</oa-a>
+					</li>
+					<li class="split">|</li>
+					<li>
+						<oa-a class="green" url="./forget-password.html">忘记密码</oa-a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/base.js"></script>
+		<script src="../js/utils.js"></script>
+		<script src="../js/vue-component.js"></script>
+		<script>
+			var login = new Vue({
+				el: '#main',
+				data: {
+					phone: '',
+					password: ''
+				},
+				methods: {
+					goLogin() {
+						var _this = this;
+
+						//校验
+						var regPhone = /^(0|86|17951)?(13[0-9]|15[012356789]|17[0678]|18[0-9]|14[57])[0-9]{8}$/;
+						var regPassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+						if(!regPhone.test(_this.phone)) {
+							mui.toast('请输入正确的手机号');
+							return;
+						}
+						if(!regPassword.test(_this.password)) {
+							mui.toast('请输入正确的密码');
+							return;
+						}
+
+						mui.ajax(CONSTANT.baseUrl + 'mobile/user/login', {
+							data: {
+								"mobile": _this.phone,
+								"password": _this.password
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'POST', //HTTP请求类型
+							async: false,
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								if(data.success) {
+									
+									mui.openWindow({
+										url: '../../OA/views/my-work/works.html',
+										createNew: true,
+										show: {
+											aniShow: 'slide-in-right'
+										}
+									});
+
+								} else {
+									mui.toast(data.message)
+								}
+
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log('登录接口请求失败');
+							}
+						})
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

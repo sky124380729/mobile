@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>工作任务新增/修改</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/css/mui.picker.all.css">
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<link rel="stylesheet" href="../../css/oa.css" />
+		<style>
+			body,
+			.mui-input-group:before,
+			.mui-input-group:after {
+				background-color: #e4e4e4;
+			}
+			
+			.mui-content {
+				background: #f5f5f5;
+			}
+			
+			.mui-bar {
+				line-height: 40px;
+				background: #fff;
+				box-shadow: none;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.mui-bar .back-text {
+				font-size: 1rem;
+				position: relative;
+				top: -1px;
+			}
+			
+			.mui-content .mui-input-group {
+				margin-top: 12px;
+			}
+			
+			.mui-input-row {
+				height: auto!important;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				content: none;
+			}
+			
+			.mui-input-row.start-time-inpput:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 15px;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4!important;
+			}
+			
+			.mui-input-row textarea {
+				height: 128px;
+			}
+			
+			.mui-bar-footer {
+				height: 60px;
+				border: none;
+				padding: 0;
+			}
+			
+			.mui-bar-footer a {
+				float: left;
+				width: 50%;
+				color: #fff;
+				text-align: center;
+				line-height: 60px;
+			}
+			
+			.submit-btn {
+				background: #e3bb1b;
+			}
+			
+			.save-btn {
+				background: #5cad5a;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="task_handle">
+			<!--头部-->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="back-text">返回</span></a>
+				<h1 style="display: none;" class="mui-title green" v-show='!titleShow'>新增工作任务</h1>
+				<h1 style="display: none;" class="mui-title green" v-show='titleShow'>修改工作任务</h1>
+			</header>
+
+			<section class="mui-content" style="margin-bottom: 100px;">
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="wtask_name">任务名称</label>
+						<input v-clear class="mui-input-clear" id="task_name" type="text" placeholder="请输入" v-model.trim="model.name">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="task_type">任务类型</label>
+						<input id="task_type" type="text" placeholder="请选择" v-model.trim="model.type" readonly @tap="chooseStatus('type')">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row start-time-inpput">
+						<label for="start_time">开始时间</label>
+						<input id="start_time" type="text" placeholder="请选择" v-model.trim="model.startTime" readonly @tap="chooseTime('startTime')">
+					</div>
+					<div class="mui-input-row">
+						<label for="end_time">结束时间</label>
+						<input id="end_time" type="text" placeholder="请选择" v-model.trim="model.endTime" readonly @tap="chooseTime('endTime')">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="taskstate">工作状态</label>
+						<input id="task_state" type="text" placeholder="请选择" v-model.trim="model.state" readonly @tap="chooseStatus('state')">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="task_desc">任务描述</label>
+						<textarea class="mui-input-clear" id="task_desc" placeholder="请输入" v-model.trim="model.desc"></textarea>
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="remark">备注</label>
+						<input class="mui-input-clear" id="remark" type="text" placeholder="请输入" v-model.trim="model.remark">
+					</div>
+				</div>
+				<div class="mui-input-group relateMember">
+					<div class="mui-input-row">
+						<h4 class="image-title">负责人</h4>
+						<div class="image-list">
+							<div class="image-item" v-for="member in model.fzr">
+								<div class="image-up"></div>
+								<p>{{member.cyrmc}}</p>
+							</div>
+							<div class="image-item">
+								<div class="image-up">
+									<div class="file"></div>
+								</div>
+								<p>添加人员</p>
+							</div>
+						</div>
+					</div>
+					<div class="mui-input-row">
+						<h4 class="image-title">参与人</h4>
+						<div class="image-list">
+							<div class="image-item" v-for="member in model.cyr">
+								<div class="image-up"><img :src="member.cyrtx"></div>
+								<p>{{member.cyrmc}}</p>
+							</div>
+							<div class="image-item">
+								<div class="image-up">
+									<div class="file"></div>
+								</div>
+								<p>添加人员</p>
+							</div>
+						</div>
+					</div>
+					<div class="mui-input-row">
+						<h4 class="image-title">抄送人</h4>
+						<div class="image-list">
+							<div class="image-item" v-for="member in model.csr">
+								<div class="image-up"><img :src="member.csrtx"></div>
+								<p>{{member.cyrmc}}</p>
+							</div>
+							<div class="image-item">
+								<div class="image-up">
+									<div class="file"></div>
+								</div>
+								<p>添加人员</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label>附件</label>
+						<label style="width: 65%;"><i class="iconfont icon-fujian mui-pull-right"></i></label>
+					</div>
+				</div>
+			</section>
+
+			<div class="mui-bar mui-bar-footer">
+				<a class="submit-btn" @tap="submitDailyWork('01')">提交</a>
+				<a class="save-btn" @tap="submitDailyWork('00')">保存</a>
+			</div>
+		</div>
+
+		<script src="../../../common/js/mui.min.js"></script>
+		<script src="../../../common/js/mui.poppicker.js"></script>
+		<script src="../../../common/js/mui.picker.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script>
+			var stateData = [{
+				value: '',
+				text: '请选择'
+			}, {
+				value: '0',
+				text: '未开始'
+			}, {
+				value: '1',
+				text: '进行中'
+			}, {
+				value: '2',
+				text: '已完成'
+			}];
+			var taskHandle = new Vue({
+				el: '#task_handle',
+				data: function() {
+					return {
+						titleShow: false,
+						workId: '',
+						model: {
+							name: '',
+							type: '',
+							startTime: '',
+							endTime: '',
+							state: '',
+							desc: '',
+							remark: '',
+							fzr:'',
+							cyr: [],
+							csr: []
+						},
+						taskType: []
+					}
+				},
+				mounted: function() {
+					var _this = this;
+					if(!findParamFromUrl("id")) {
+						_this.titleShow = false
+					} else {
+						_this.titleShow = true;
+						_this.workId = findParamFromUrl('id');
+						_this.getData(findParamFromUrl(_this.workId));
+					}
+					mui.myAjax({
+						url: CONSTANT.baseUrl + 'mobile/workTask/get/type',
+						type: 'get',
+						success: function(res) {
+							if(res.success) {
+								res.data.forEach(function(item, index, array) {
+									_this.taskType.push({
+										value: item.id,
+										text: item.rwlxmc
+									});
+								});
+							} else {
+								mui.toast(res.message)
+							}
+						}
+					})
+				},
+				methods: {
+					chooseTime: function(str) {
+						var _this = this;
+						var statePicker = new mui.PopPicker();
+						var timePicker = new mui.DtPicker({
+							'type': "date",
+							"beginYear": 2017,
+							"endYear": 9999
+						});
+						timePicker.show(function(rs) {
+							_this.model[str] = rs.text;
+							timePicker.dispose();
+							timePicker = null;
+						});
+					},
+					chooseStatus: function(str) {
+						var _this = this;
+						var statusPicker = new mui.PopPicker();
+						var data = str === 'type' ? _this.taskType : stateData;
+						statusPicker.setData(data);
+						statusPicker.show(function(items) {
+							if(!items[0].value) {
+								_this.model[str] = ''
+							} else {
+								_this.model[str] = items[0].text;
+							}
+							_this.model[str + 'Id'] = items[0].value;
+							this.dispose();
+							statusPicker = null;
+						})
+					},
+					getData: function() {
+						var _this = this;
+
+						mui.myAjax({
+							url: CONSTANT.baseUrl + 'mobile/workTask/get/' + _this.workId,
+							type: 'get',
+							success: function(res) {
+								if(res && res.success) {
+									_this.model.name = res.data.rwmc;
+									_this.model.startTime = res.data.kssj;
+									_this.model.endTime = res.data.jssj;
+									_this.model.stateId = res.data.gzzt;
+									for(var i = 0; i < stateData.length; i++) { //根据状态id显示对应的状态名
+										if(stateData[i].value == res.data.gzzt) {
+											_this.model.state = stateData[i].text;
+										}
+									}
+									_this.model.desc = res.data.nwms;
+									_this.model.remark = res.data.bz;
+									_this.model.typeId = res.data.rwlxid;
+									_this.model.type = res.data.rwlxmc;
+									_this.model.cyr = res.data.listCyr;
+									_this.model.csr = res.data.listCsr;
+								} else {
+									mui.toast(res.message)
+								}
+							}
+						})
+					},
+					submitDailyWork: function(tjzt) {
+						var _this = this;
+
+						console.log("======", _this.model);
+						mui.ajax(CONSTANT.baseUrl + 'mobile/workTask/saveOrUpdate', {
+							data: {
+								gzrw: {
+									id: _this.workId,
+									rwmc: _this.model.name,
+									kssj: _this.model.startTime,
+									jssj: _this.model.endTime,
+									rwlxid: _this.model.typeId,
+									gzzt: _this.model.stateId,
+									nwms: _this.model.desc,
+									bz: _this.remark,
+									tjzt: tjzt,
+									fzrid: '12'
+								},
+								listCyrIds: ['12']
+							},
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							type: 'POST',
+							dataType: 'json',
+							async: false,
+							success: function(res) {
+								if(res && res.success) {
+									mui.toast('提交成功！')
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						})
+					},
+				}
+			})
+		</script>
+	</body>
+
+</html>

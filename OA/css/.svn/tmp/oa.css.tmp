@@ -1,0 +1,471 @@
+body,
+.mui-content {
+	background: #f5f5f5;
+}
+
+.mui-segmented-control {
+	background: #F5F5F5!important;
+	z-index: 17;
+}
+
+
+/*.mui-segmented-control.mui-scroll-wrapper {
+    height: auto;
+}*/
+
+.mui-control-item {
+	line-height: 34px!important;
+}
+
+.mui-control-item.mui-active {
+	color: #5CAD5A!important;
+}
+
+.mui-slider-group .mui-slider-item {
+	border: none!important;
+}
+
+.mui-table-view {
+	background: #F5F5F5!important;
+}
+
+.mui-slider {
+	z-index: auto;
+}
+
+
+/* 搜索筛选栏样式 */
+
+.mui-bar {
+	line-height: 40px;
+	background: #fff;
+	box-shadow: none;
+	border-bottom: 1px solid #eee;
+}
+
+.mui-bar .back-text {
+	font-size: 1rem;
+	position: relative;
+	top: -1px;
+}
+
+.search-bar {
+	display: flex;
+	margin-bottom: 8px;
+	color: #595757;
+	height: 36px;
+	line-height: 36px;
+	border-bottom: 1px solid #eee;
+	background: #fff;
+	position: relative;
+	z-index: 100;
+}
+
+.search-bar .search-bar-item {
+	font-size: 15px;
+}
+
+.search-bar:after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+.mask {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9;
+	background: rgba(0, 0, 0, 0.3);
+}
+
+
+/* 筛选层的样式 */
+
+.filter-panel {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 78%;
+	min-height: 100%;
+	overflow: hidden;
+	background: #fff;
+	z-index: 999;
+	padding: 30px 0px;
+	/*float: right;
+	width: 78%;
+	height: 100%;
+	overflow-x: hidden;
+	background-color: #fff;
+	padding: 30px 0px 0px;*/
+}
+
+.filter-panel .row-head {
+	margin-bottom: 10px;
+	text-align: left;
+	padding: 0 12px;
+	color: #5CAD5A;
+	font-size: 12px;
+}
+
+.filter-panel .row-body {
+	overflow: hidden;
+	margin-right: -2%;
+	padding: 0 12px 5px;
+	font-size: 0;
+}
+
+.filter-panel .row-foot {
+	position: absolute;
+	bottom: 0;
+	display: flex;
+	width: 100%;
+	height: 48px;
+	line-height: 48px;
+	/*display: flex;
+	width: 100%;
+	height: 48px;
+	line-height: 48px;*/
+}
+
+.filter-panel .row-foot .foot-btn {
+	flex: 1;
+	text-align: center;
+	font-size: 13px;
+	color: white;
+}
+
+.filter-panel .row-foot .foot-btn.reset {
+	background-color: #e3bb1b;
+}
+
+.filter-panel .row-foot .foot-btn.finish {
+	background-color: #5cad5a;
+}
+
+.filter-panel .filter-item {
+	display: inline-block;
+	width: 30%;
+	height: 32px;
+	line-height: 32px;
+	margin: 0 3% 10px 0;
+	text-align: center;
+	font-size: 13px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background-color: #eee;
+	border: 1px solid #eee;
+	border-radius: 6px;
+}
+
+.filter-panel .filter-item.active {
+	color: #5cad5a;
+	background-color: #eef7ee;
+	border-color: #5cad5a;
+}
+
+.filter-panel .filter-item.filter-block {
+	width: 97%;
+}
+
+
+/*搜索样式*/
+
+.search-bar .search-bar-item {
+	flex: 1;
+}
+
+.search-bar .search-box {
+	display: flex;
+	width: 100%;
+	font-size: 13px;
+}
+
+.search-bar .search-box input {
+	flex: 5;
+	height: 25px;
+	font-size: 13px;
+	text-align: left;
+	margin: 5px 10px;
+	padding-left: 40px;
+	background: url(../images/search.png) no-repeat 10px;
+	background-size: 20px 20px;
+	background-color: #f2f2f2;
+}
+
+.search-bar .search-box .cancel {
+	flex: 1;
+	color: #5cad5a;
+}
+
+.search-bar .mask {
+	position: absolute;
+	top: 80px;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 998;
+	background-color: rgba(0, 0, 0, .3);
+}
+
+
+/* 列表样式  */
+
+.oa-list .list-item {
+	margin-bottom: 12px;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+	background: #fff;
+	position: relative;
+}
+
+.list-item .list-modal {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 1;
+}
+
+.list-modal .copy-btn {
+	display: inline-block;
+	width: 80px;
+	height: 80px;
+	line-height: 80px;
+	border-radius: 50%;
+	background: #7dbbc6;
+	color: #fff;
+	position: relative;
+	z-index: 10;
+}
+
+
+/* card样式 */
+
+.mui-card-header>.circle:first-child {
+	float: left;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 13px;
+	text-align: center;
+	border-radius: 50%;
+	margin-right: 0.5rem;
+}
+
+.mui-card-header>img:first-child {
+	width: 40px!important;
+	height: 40px;
+	border-radius: 50%;
+	margin-right: 0.5rem;
+}
+
+.mui-card-header h5 {
+	font-size: 1rem;
+	font-weight: normal;
+	color: #000;
+}
+
+.mui-card-header {
+	padding: 17px 15px 14px 15px!important;
+}
+
+.mui-card-header:after {
+	content: none;
+}
+
+.mui-card-content {
+	padding: 0 15px 15px 15px;
+}
+
+.mui-card-content h4 {
+	font-size: 1rem;
+	font-weight: normal;
+	line-height: 28px;
+}
+
+.mui-card-content p {
+	margin: 0;
+	font-size: 15px;
+	line-height: 28px;
+}
+
+.mui-card-content span {
+	color: #000;
+}
+
+.list-item-sign {
+	float: right;
+	padding: 0 0.76rem;
+	height: 24px;
+	line-height: 24px;
+	font-size: 0.74rem;
+	font-weight: normal;
+	color: #898989;
+	border-radius: 4px;
+	background: #f4f4f4;
+}
+
+
+/* 上拉加载 下拉刷新样式 */
+
+.mui-pull-top-tips {
+	position: absolute;
+	top: 60px;
+	left: 50%;
+	margin-left: -25px;
+	width: 40px;
+	height: 40px;
+	border-radius: 100%;
+	z-index: 8;
+}
+
+.mui-bar~.mui-pull-top-tips {
+	top: 24px;
+}
+
+.mui-pull-top-wrapper {
+	width: 42px;
+	height: 42px;
+	display: block;
+	text-align: center;
+	background-color: #efeff4;
+	border: 1px solid #ddd;
+	border-radius: 25px;
+	background-clip: padding-box;
+	box-shadow: 0 4px 10px #bbb;
+	overflow: hidden;
+}
+
+.mui-pull-top-tips.mui-transitioning {
+	-webkit-transition-duration: 200ms;
+	transition-duration: 200ms;
+}
+
+.mui-pull-top-tips .mui-pull-loading {
+	margin: 0;
+}
+
+.mui-pull-bottom-tips {
+	text-align: center;
+	background-color: #F5F5F5;
+	font-size: 15px;
+	line-height: 40px;
+	color: #777;
+}
+
+.mui-pull-top-canvas {
+	overflow: hidden;
+	background-color: #F5F5F5;
+	border-radius: 40px;
+	box-shadow: 0 4px 10px #bbb;
+	width: 40px;
+	height: 40px;
+	margin: 0 auto;
+}
+
+.mui-pull-top-canvas canvas {
+	width: 40px;
+}
+
+.mui-fullscreen {
+	height: auto;
+}
+
+.tab-nav-item {
+	display: flex;
+}
+
+.tab-nav-item>a {
+	flex: 1;
+}
+
+
+/* member */
+.relateMember{
+	padding: 15px;
+}
+.relateMember .mui-input-row{
+	border-bottom: 1px solid #e4e4e4;
+}
+.relateMember .mui-input-row:last-child{
+	border-bottom: 0;
+}
+.image-title{
+	margin-top: 10px;
+	font-size: 1rem;
+}
+.image-list {
+	width: 100%;
+	padding: 10px 2px 10px 12px;
+	overflow: hidden;
+}
+
+.image-item {
+	width: 60px;
+	height: auto;
+	display: inline-block;
+	margin-bottom: 10px;
+	vertical-align: top;
+	text-align: center;
+	cursor: pointer;
+}
+.image-item p{
+	margin: 0;
+}
+.image-item .file {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background: #f8f8f8 url(../images/plus.png) no-repeat center;
+	background-size: 100% 100%;
+}
+
+.image-up .image-close {
+	width: 100%;
+	height: 100%;
+	color: #e47569;
+	background: transparent url(../../common/images/close.png);
+	background-size: 100% 100%;
+}
+
+.image-item .image-up {
+	overflow: hidden;
+	position: relative;
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
+	line-height: 42px;
+	border: 1px solid #dedede;
+	color: #4e9a4c;
+	display: inline-block;
+	text-align: center;
+	background-size: 100% 100% !important;
+<<<<<<< .mine
+}
+
+.nav-content {
+	position: absolute;
+	top: 82px;
+	bottom: 0;
+	width: 100%;
+	height: auto;
+}
+=======
+}
+.image-item .image-up img{
+	width: 100%;
+	height: 100%;
+}
+>>>>>>> .r47259

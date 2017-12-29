@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>日常工作新增/修改</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/css/mui.picker.all.css">
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<style>
+		
+			.mui-input-group:before,
+			.mui-input-group:after {
+				background-color: #e4e4e4;
+			}
+			
+			body,.mui-content {
+				background: #f5f5f5;
+			}
+			
+			.mui-bar {
+				line-height: 40px;
+				background: #fff;
+				box-shadow: none;
+				border-bottom: 1px solid #eee;
+			}
+			
+			.mui-bar .back-text {
+				font-size: 1rem;
+				position: relative;
+				top: -1px;
+			}
+			
+			.mui-content .mui-input-group {
+				margin-top: 12px;
+			}
+			
+			.mui-input-row {
+				height: auto!important;
+			}
+			
+			.mui-input-group .mui-input-row:after {
+				content: none;
+			}
+			
+			.mui-input-row.start-time-inpput:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 15px;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4!important;
+			}
+			
+			.mui-input-row textarea {
+				height: 128px;
+			}
+			
+			.mui-bar-footer {
+				height: 60px;
+				border: none;
+				padding: 0;
+			}
+			
+			.mui-bar-footer a {
+				float: left;
+				width: 50%;
+				color: #fff;
+				text-align: center;
+				line-height: 60px;
+			}
+			
+			.submit-btn {
+				background: #e3bb1b;
+			}
+			
+			.save-btn {
+				background: #5cad5a;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="daily_work_handle">
+			<!--头部-->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"><span class="back-text">返回</span></a>
+				<h1 style="display: none;" class="mui-title green" v-show='!titleShow'>新增日常工作</h1>
+				<h1 style="display: none;" class="mui-title green" v-show='titleShow'>修改日常工作</h1>
+			</header>
+
+			<section class="mui-content">
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="work_name">工作名称</label>
+						<input v-clear class="mui-input-clear" id="work_name" type="text" placeholder="请输入" v-model.trim="workName">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row start-time-inpput">
+						<label for="start_time">开始时间</label>
+						<input id="start_time" type="text" placeholder="请选择" v-model.trim="startTime" readonly @tap="chooseStartTime">
+					</div>
+					<div class="mui-input-row">
+						<label for="end_time">结束时间</label>
+						<input id="end_time" type="text" placeholder="请选择" v-model.trim="endTime" readonly @tap="chooseEndTime">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="work_state">工作状态</label>
+						<input id="work_state" type="text" placeholder="请选择" v-model.trim="workState" readonly @tap="chooseState">
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="work_description">工作描述</label>
+						<textarea class="mui-input-clear" id="work_description" placeholder="请输入" v-model.trim="workDescription"></textarea>
+					</div>
+				</div>
+				<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label for="remark">备注</label>
+						<input class="mui-input-clear" id="remark" type="text" placeholder="请输入" v-model.trim="remark">
+					</div>
+				</div>
+			</section>
+
+			<div class="mui-bar mui-bar-footer">
+				<a class="submit-btn" @tap="submitDailyWork">提交</a>
+				<a class="save-btn" @tap="saveDailyWork">保存</a>
+			</div>
+		</div>
+
+		<script src="../../../common/js/mui.min.js"></script>
+		<script src="../../../common/js/mui.poppicker.js"></script>
+		<script src="../../../common/js/mui.picker.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script>
+			var dailyWorkHandle = new Vue({
+				el: '#daily_work_handle',
+				data: function() {
+					return {
+						titleShow: false,
+						workName: '',
+						startTime: '',
+						endTime: '',
+						workState: '',
+						workStateData: [{
+							value: '',
+							text: '请选择'
+						}, {
+							value: '0',
+							text: '未开始'
+						}, {
+							value: '1',
+							text: '进行中'
+						}, {
+							value: '2',
+							text: '已完成'
+						}],
+						workStateId: '',
+						workDescription: '',
+						remark: '',
+						workId:''
+					}
+				},
+				mounted: function() {
+					var _this = this;
+					if(!findParamFromUrl("id")) {
+						_this.titleShow = false
+					} else {
+						_this.titleShow = true;
+						_this.workId = findParamFromUrl('id');
+						_this.getDailyWork();
+					}
+				},
+				methods: {
+					getNow:function(){
+						var nowO = {};
+						var now = new Date();
+						nowO.year = now.getFullYear();
+						nowO.month = now.getMonth() + 1;
+						nowO.day = now.getDate();
+						nowO.hours = now.getHours();
+						nowO.minutes = now.getMinutes();
+						var sec = now.getSeconds();
+						nowO.sec = parseInt(sec)<10 ? '0'+ sec : sec;
+						return nowO;
+					},
+					chooseStartTime: function() {
+						var _this = this;
+						var time = _this.getNow();
+						if(_this.endTime){
+							var end = new Date(_this.endTime);
+							var startTimePicker = new mui.DtPicker({
+								"beginYear": time.year,
+								'beginMonth':time.month,
+								'beginDay':time.day,
+								'beginHours':time.hours,
+								'beginMinutes':time.minutes,
+								"endYear": end.getFullYear(),
+								'endMonth':end.getMonth() + 1,
+								'endDay':end.getDate(),
+								'endHours':end.getHours(),
+								'endMinutes':end.getMinutes(),
+							});
+						}else{
+							var startTimePicker = new mui.DtPicker({
+								"beginYear": time.year,
+								'beginMonth':time.month,
+								'beginDay':time.day,
+								'beginHours':time.hours,
+								'beginMinutes':time.minutes,
+								"endYear": 9999
+							});
+						}
+						startTimePicker.show(function(rs) {
+							_this.startTime = rs.text + ':' + time.sec;
+							startTimePicker.dispose();
+							startTimePicker = null;
+						});
+					},
+					chooseEndTime: function() {
+						var _this = this;
+						var time = _this.getNow();
+						if(_this.startTime){
+							var start = new Date(_this.startTime);
+							var endTimePicker = new mui.DtPicker({
+								"beginYear": start.getFullYear(),
+								'beginMonth':start.getMonth() + 1,
+								'beginDay':start.getDate(),
+								'beginHours':start.getHours(),
+								'beginMinutes':start.getMinutes()
+							});
+						}else{
+							var endTimePicker = new mui.DtPicker({
+								"beginYear": time.year,
+								'beginMonth':time.month,
+								'beginDay':time.day,
+								'beginHours':time.hours,
+								'beginMinutes':time.minutes,
+								"endYear": 9999
+							});
+						};
+						endTimePicker.show(function(rs) {
+							var seconds = (new Date()).getSeconds();
+							if( parseInt(seconds) < 10){
+								seconds = '0'+ seconds;
+							}
+							_this.endTime = rs.text + ':' + seconds;
+							endTimePicker.dispose();
+							endTimePicker = null;
+						});
+					},
+					chooseState: function() {
+						var _this = this;
+						var statePicker = new mui.PopPicker();
+						statePicker.setData(_this.workStateData);
+						statePicker.show(function(items) {
+							if(!items[0].value) {
+								_this.workState = ''
+							} else {
+								_this.workState = items[0].text;
+							}
+							_this.workStateId = items[0].value;
+							this.dispose();
+							statePicker = null;
+						})
+					},
+					getDailyWork: function() {
+						var _this = this;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/routine/self/get/' + _this.workId, {
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							type: 'get',
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if(data && data.success) {
+									_this.workName = data.data.gzmc;
+									_this.startTime = data.data.kssj;
+									_this.endTime = data.data.jssj;
+									_this.workStateId = data.data.gzzt;
+									for(var i = 0; i < _this.workStateData.length; i++) { //根据状态id显示对应的状态名
+										if(_this.workStateData[i].value == data.data.gzzt) {
+											_this.workState = _this.workStateData[i].text;
+										}
+									}
+									_this.workDescription = data.data.nwms;
+									_this.remark = data.data.bz;
+								}
+							},
+							error:function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						})
+					},
+					submitDailyWork: function() {
+						var _this = this;
+						if(_this.titleShow) {
+							mui.ajax(CONSTANT.baseUrl + 'mobile/routine/self/update', {
+								data: {
+									gzmc: _this.workName,
+									kssj: _this.startTime,
+									jssj: _this.endTime,
+									gzzt: _this.workStateId,
+									nwms: _this.workDescription,
+									bz: _this.remark,
+									tjzt: '01',
+									id:_this.workId
+								},
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								type: 'POST',
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									if(data && data.success) {
+										mui.toast('修改提交成功！');
+										mui.openWindow({
+												url: "daily-work-check.html?id=" + _this.workId,
+												createNew: true,
+												show: {
+													aniShow: 'slide-in-left'
+												}
+										});
+									}else{
+										mui.toast(data.message);
+									}
+								},
+								error:function(xhr, type, errorThrown) {
+									mui.toast(errorThrown);
+								}
+							})
+						} else {
+							mui.ajax(CONSTANT.baseUrl + 'mobile/routine/self/save', {
+								data: {
+									gzmc: _this.workName,
+									kssj: _this.startTime,
+									jssj: _this.endTime,
+									gzzt: _this.workStateId,
+									nwms: _this.workDescription,
+									bz: _this.remark,
+									tjzt: '01'
+								},
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								type: 'POST',
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									if(data && data.success) {
+										mui.toast('提交成功！');
+										mui.openWindow({
+												url: "daily-work.html",
+												createNew: true,
+												show: {
+													aniShow: 'slide-in-left'
+												}
+										});
+									}else{
+										mui.toast(data.message);
+									}
+								},
+								error:function(xhr, type, errorThrown) {
+									mui.toast(errorThrown);
+								}
+							})
+						}
+
+					},
+					saveDailyWork: function() {
+						var _this = this;
+						if(_this.titleShow) {
+							mui.ajax(CONSTANT.baseUrl + 'mobile/routine/self/update', {
+								data: {
+									gzmc: _this.workName,
+									kssj: _this.startTime,
+									jssj: _this.endTime,
+									gzzt: _this.workStateId,
+									nwms: _this.workDescription,
+									bz: _this.remark,
+									tjzt: '00',
+									id:_this.workId
+								},
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								type: 'POST',
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									if(data && data.success) {
+										mui.toast('修改保存成功！');
+										mui.openWindow({
+												url: "daily-work-check.html?id=" + _this.workId,
+												createNew: true,
+												show: {
+													aniShow: 'slide-in-left'
+												}
+										});
+									}else{
+										mui.toast(data.message);
+									}
+								},
+								error:function(xhr, type, errorThrown) {
+									mui.toast(errorThrown);
+								}
+							})
+						} else {
+							mui.ajax(CONSTANT.baseUrl + 'mobile/routine/self/save', {
+								data: {
+									gzmc: _this.workName,
+									kssj: _this.startTime,
+									jssj: _this.endTime,
+									gzzt: _this.workStateId,
+									nwms: _this.workDescription,
+									bz: _this.remark,
+									tjzt: '00'
+								},
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								type: 'POST',
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									if(data && data.success) {
+										mui.toast('保存成功！');
+										mui.openWindow({
+												url: "daily-work.html",
+												createNew: true,
+												show: {
+													aniShow: 'slide-in-left'
+												}
+										});
+									}else{
+										mui.toast(data.message);
+									}
+								},
+								error:function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+								}
+							})
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

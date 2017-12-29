@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>完善资料</title>
+		<link rel="stylesheet" href="../css/mui.css">
+		<link rel="stylesheet" href="../css/base.css">
+		<link rel="stylesheet" href="../css/mui.picker.all.css">
+		<link rel="stylesheet" href="../css/info-complete.css">
+	</head>
+
+	<body>
+		<div id="info_complete">
+			<!--头部-->
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-icon mui-icon-left-nav mui-pull-left" @tap="backPrev" v-show="!isShow(1)"><span class="back-text">返回</span></a>
+				<h1 class="mui-title green">完善资料</h1>
+			</header>
+			<!--主体-->
+			<section class="mui-content">
+				<!--基本信息开始-->
+				<div id="basic_info" v-show="isShow(1)">
+					<p class="sub-title">基本信息</p>
+					<!--输入栏-->
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label for="user_name">姓<i class="space"></i>名</label>
+							<input v-clear id="user_name" type="text" placeholder="请输入" maxlength="10" v-model.trim="userName">
+						</div>
+						<div class="mui-input-row">
+							<label for="gender">性<i class="space"></i>别</label>
+							<input v-clear id="gender" type="text" placeholder="请选择" readonly v-model="gender" @tap="chooseGender">
+						</div>
+						<div class="mui-input-row">
+							<label for="phone_number">手机号码</label>
+							<input id="phone_number" type="number" pattern="\d*" placeholder="请输入" readonly v-model="phoneNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="birthday">出生日期</label>
+							<input class="" id="birthday" type="text" placeholder="请选择" readonly v-model="birthday" @tap="chooseBirthday">
+						</div>
+						<div class="mui-input-row">
+							<label for="id_number">身份证号</label>
+							<input v-clear id="id_number" type="text" placeholder="请输入" maxlength="18" v-model.trim="idNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="address">家庭住址</label>
+							<input v-clear id="address" type="text" placeholder="请输入" v-model.trim="address">
+						</div>
+						<div class="mui-input-row">
+							<label for="user_email">邮箱地址</label>
+							<input v-clear id="user_email" type="email" placeholder="请输入" maxlength="50" v-model.trim="userEmail">
+						</div>
+					</form>
+					<!--按钮-->
+					<div class="mui-content-padded">
+						<button class="mui-btn mui-btn-block mui-btn-green" @click="showStep(2)" :disabled="disable">下一步</button>
+					</div>
+				</div>
+				<!--基本信息结束-->
+				<!--单位信息开始-->
+				<div style="display: none;" id="enterprise_info" v-show="isShow(2)">
+					<p class="sub-title">单位信息</p>
+					<!--输入栏-->
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label for="belong_enterprise">所属企业</label>
+							<input v-clear id="belong_enterprise" type="text" placeholder="请选择" readonly v-model.trim="belongEnterprise" @tap="chooseEnterprise">
+						</div>
+						<div class="mui-input-row">
+							<label for="department">部<i class="space"></i>门</label>
+							<input class="" id="department" type="text" placeholder="请选择" readonly v-model.trim="department" @tap="chooseDepartment">
+						</div>
+						<div class="mui-input-row">
+							<label for="duty">职<i class="space"></i>务</label>
+							<input class="" id="duty" type="text" placeholder="请选择" readonly v-model.trim="duty" @tap="chooseDuty">
+						</div>
+						<div class="mui-input-row">
+							<label for="job_number">工<i class="space"></i>号</label>
+							<input v-clear id="job_number" type="text" placeholder="请输入" v-model.trim="jobNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="tel_number">座<i class="space"></i>机</label>
+							<input v-clear id="tel_number" type="text" placeholder="请输入" v-model.trim="telNumber">
+						</div>
+						<div class="mui-input-row">
+							<label for="entry_time">入职时间</label>
+							<input class="" id="entry_time" type="text" placeholder="请选择" readonly v-model="entryTime" @tap="chooseEntryTime">
+						</div>
+					</form>
+					<!--按钮-->
+					<div class="mui-content-padded">
+						<button class="mui-btn mui-btn-block mui-btn-green mui-btn-outlined" @tap="showStep(1)">上一步</button>
+						<button class="mui-btn mui-btn-block mui-btn-green" @tap="showStep(3)">下一步</button>
+					</div>
+				</div>
+				<!--单位信息结束-->
+				<!--教育信息开始-->
+				<div style="display: none;" id="education_info" v-show="isShow(3)">
+					<p class="sub-title">教育信息</p>
+					<!--输入栏-->
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label for="qualification">学<i class="space"></i>历</label>
+							<input class="" id="qualification" type="text" placeholder="请选择" readonly v-model="qualification" @tap="chooseQualification">
+						</div>
+						<div class="mui-input-row">
+							<label for="degree">学<i class="space"></i>位</label>
+							<input v-clear id="degree" type="text" placeholder="请输入" v-model="degree">
+						</div>
+						<div class="mui-input-row">
+							<label for="graduate_school">毕业院校</label>
+							<input v-clear id="graduate_school" type="text" placeholder="请输入" v-model="graduateSchool">
+						</div>
+						<div class="mui-input-row">
+							<label for="graduate_time">毕业时间</label>
+							<input class="" id="graduate_time" type="text" placeholder="请选择" v-model="graduateTime" readonly @tap="chooseGraduateTime">
+						</div>
+						<div class="mui-input-row">
+							<label for="graduate_major">毕业专业</label>
+							<input v-clear id="graduate_major" type="text" placeholder="请输入" v-model="graduateMajor">
+						</div>
+					</form>
+					<!--按钮-->
+					<div class="mui-content-padded">
+						<button class="mui-btn mui-btn-block mui-btn-green mui-btn-outlined" @click="showStep(2)">上一步</button>
+						<button class="mui-btn mui-btn-block mui-btn-green" @tap="saveInfo">保存信息</button>
+					</div>
+				</div>
+				<!--教育信息结束-->
+			</section>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.picker.min.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script src="../js/vue.js"></script>
+		<script src="../js/base.js"></script>
+		<script src="../js/utils.js"></script>
+		<script>
+			var infoComplete = new Vue({
+				el: '#info_complete',
+				data: function() {
+					return {
+						show: 1,
+						disable: true,
+						belongEnterprise: '',
+						department: '',
+						duty: '',
+						jobNumber: '',
+						telNumber: '',
+						entryTime: '',
+						userName: '',
+						gender: '',
+						genderId: '',
+						phoneNumber: '',
+						birthday: '',
+						idNumber: '',
+						address: '',
+						userEmail: '',
+						genderData: [{
+							value: '',
+							text: '请选择'
+						}, {
+							value: '0',
+							text: '男'
+						}, {
+							value: '1',
+							text: '女'
+						}],
+						qualification: '',
+						degree: '',
+						graduateSchool: '',
+						graduateTime: '',
+						graduateMajor: '',
+						qualificationData: [{
+							value: '',
+							text: '请选择'
+						}, {
+							value: 'middle',
+							text: '初中'
+						}, {
+							value: 'highMiddle',
+							text: '高中'
+						}, {
+							value: 'juniorColledge',
+							text: '专科'
+						}, {
+							value: 'bachelor',
+							text: '本科'
+						}, {
+							value: 'postgraduate',
+							text: '硕士研究生'
+						}, {
+							value: 'phd',
+							text: '博士研究生'
+						}],
+						enterprisePicker: new mui.PopPicker(),
+						enterprisesData: [],
+						relateEnterprisesData: [],
+						enterpriseId: '',
+						departmentData: [],
+						departmentId: '',
+						dutiesData: [],
+						dutyId: '',
+						userInfo: ''
+					}
+				},
+				created: function() {
+
+				},
+				mounted: function() {
+					/*初始化用户信息*/
+					this.phoneNumber = getUserInfo().data.sjhm; //通过公共接口获取用户手机号
+					this.getInfo();                             //根据手机号获取用户信息
+					this.userName = this.userInfo.xm; //姓名
+					if(this.userInfo.xb) {
+						this.gender = this.userInfo.xb == 0 ? '男' : '女'; //性别
+						this.genderId = this.userInfo.xb;//性别id
+					}
+					this.phoneNumber = this.userInfo.sjhm; //手机号码
+					if(this.userInfo.csrq) {
+						this.birthday = this.userInfo.csrq.split(' ')[0]; //出生日期
+					}
+					this.idNumber = this.userInfo.sfzhm; //身份证号码
+					this.address = this.userInfo.jtzz; //家庭住址
+					this.userEmail = this.userInfo.yx; //邮箱
+					this.belongEnterprise = this.userInfo.qymc; //企业名称
+					this.enterpriseId = this.userInfo.qyid; //企业id
+					if(this.userInfo.qyid) { //根据企业id去拿对应的部门和职位信息
+						this.getDepartment(this.userInfo.qyid);
+						this.getDuties(this.userInfo.qyid);
+					}
+					if(this.userInfo.bmid) {
+						this.departmentId = this.userInfo.bmid; //部门id
+						for(var i = 0; i < this.departmentData.length; i++) { //根据部门id显示对应的部门名称
+							if(this.departmentData[i].value == this.userInfo.bmid) {
+								this.department = this.departmentData[i].text;
+							}
+						}
+					}
+					if(this.userInfo.zw) {
+						this.dutyId = this.userInfo.zw; //职位id
+						for(var i = 0; i < this.dutiesData.length; i++) { //根据部门id显示对应的部门名称
+							if(this.dutiesData[i].value == this.userInfo.zw) {
+								this.duty = this.dutiesData[i].text;
+							}
+						}
+					}
+					this.jobNumber = this.userInfo.gh; //工号
+					this.telNumber = this.userInfo.gddh; //座机
+					if(this.userInfo.rzrq) {
+						this.entryTime = this.userInfo.rzrq.split(' ')[0]; //入职日期
+					}
+					this.qualification = this.userInfo.xl; //学历
+					this.degree = this.userInfo.xw; //学位
+					this.graduateSchool = this.userInfo.byxx; //毕业院校
+					this.graduateMajor = this.userInfo.sxzz; //所学专业
+					if(this.userInfo.bysj) { 
+						this.graduateTime = this.userInfo.bysj.split(' ')[0];//毕业时间
+					}
+					/*获取所有企业信息*/
+					this.getEnterprises(); 
+
+					backControl(); //返回键直接退出应用
+				},
+				watch: {
+					userName: function() {  //假如用户名没有输入，无法进入下一步
+						if(!this.userName) {
+							this.disable = true;
+						} else {
+							this.disable = false;
+						}
+					}
+				},
+				methods: {
+					validate: function(testObj) { //验证手机号和邮箱
+						var _this = this;
+						var isValid = true;
+						var idCardReg = /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/;
+						var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+						function checkEle(arr, ele) {
+							for(var i = 0; i <= arr.length; i++) {
+								if(arr[i] == ele) {
+									return true
+								}
+							}
+							return false
+						};
+						if(checkEle(testObj, 'id') && _this.idNumber && !idCardReg.test(_this.idNumber)) {
+							mui.toast("请输入正确的身份证号！");
+							isValid = false;
+							return
+						};
+						if(checkEle(testObj, 'email') && _this.userEmail && !emailReg.test(_this.userEmail)) {
+							mui.toast("请输入正确的邮箱！");
+							isValid = false;
+							return
+						}
+						return isValid
+					},
+					backPrev: function() {    //返回箭头控制
+						if(this.show == 2) {
+							this.show = 1;
+						} else if(this.show == 3) {
+							this.show = 2;
+						}
+					},
+					isShow: function(tab) {        //是否显示
+						return this.show === tab;
+					},
+					showStep: function(step) {     //显示上一步、下一步
+						var val;
+						if(step == 2) {
+							var val = this.validate(['id', 'email'])
+						} else if(step == 1) {
+							this.show = step;
+						} else {
+							this.show = step;
+						}
+						if(val) {
+							this.show = step;
+						}
+					},
+					chooseEntryTime: function() { //选择入职时间
+						var _this = this;
+						/*方式一:使用原生选择时间*/
+						/*chooseTime({
+						 	max_date: '2020-6-1',
+							confirmFun: function(date) {
+								_this.birthday = date;
+							}
+						});*/
+						/*方式二:使用H5
+						 *参数
+						 * 'type': 'date' | 'time' | 'month' | 'hour'
+						 * "value":"2015-10-10 10:10", //当前时间
+						 * "beginYear"
+						 * "endYear"
+						 * 
+						 * */
+						var entryTimePicker = new mui.DtPicker({
+							"type": "date",
+							"beginYear": 1911,
+							"endYear": 2017
+						});
+						entryTimePicker.show(function(rs) {
+							/*
+							 * rs.value 拼合后的 value
+							 * rs.text 拼合后的 text
+							 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+							 * rs.m 月，用法同年
+							 * rs.d 日，用法同年
+							 * rs.h 时，用法同年
+							 * rs.i 分（minutes 的第二个字母），用法同年
+							 */
+							_this.entryTime = rs.text;
+							/* 
+							 * 返回 false 可以阻止选择框的关闭
+							 * return false;
+							 */
+							entryTimePicker.dispose();
+							entryTimePicker = null;
+						});
+					},
+					chooseGender: function() { //选择性别
+						var _this = this;
+						var genderPicker = new mui.PopPicker();
+						genderPicker.setData(_this.genderData);
+						genderPicker.show(function(items) {
+							if(!items[0].value) {
+								_this.gender = ''
+							} else {
+								_this.gender = items[0].text;
+							}
+							_this.genderId = items[0].value;
+							this.dispose();
+							genderPicker = null;
+						})
+					},
+					chooseBirthday: function() { //选择生日时间
+						var _this = this;
+						var birthdayPicker = new mui.DtPicker({
+							"type": "date",
+							"beginYear": 1800,
+							'endYear': 2017
+						});
+						birthdayPicker.show(function(rs) {
+							_this.birthday = rs.text;
+							birthdayPicker.dispose();
+							birthdayPicker = null;
+						});
+					},
+					chooseQualification: function() { //选择学历
+						var _this = this;
+						var qualificationPicker = new mui.PopPicker();
+						qualificationPicker.setData(_this.qualificationData);
+						qualificationPicker.show(function(items) {
+							if(!items[0].value) {
+								_this.qualification = ''
+							} else {
+								_this.qualification = items[0].text;
+							}
+						})
+					},
+					chooseGraduateTime: function() { //选择毕业时间
+						var _this = this;
+						var graduateTimePicker = new mui.DtPicker({
+							"type": "date",
+							"beginYear": 1911
+						});
+						graduateTimePicker.show(function(rs) {
+							_this.graduateTime = rs.text
+							graduateTimePicker.dispose();
+							graduateTimePicker = null;
+						});
+					},
+					getInfo: function() {    //根据手机号获取用户信息
+						var _this = this;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/user/getuser?sjhm=' + _this.phoneNumber, {
+							type: 'GET',
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if(data.success) {
+									_this.userInfo = data.data;
+								} else {
+									console.log('获取用户信息失败！')
+								}
+							}
+						})
+					},
+					saveInfo: function() {    //保存用户信息
+						var _this = this;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/user/update', {
+							data: {
+								xm: _this.userName,
+								xb: _this.genderId,
+								csrq: _this.birthday,
+								sfzhm: _this.idNumber,
+								sjhm:_this.phoneNumber,
+								jtzz: _this.address,
+								yx: _this.userEmail,
+								qyid: _this.enterpriseId,
+								qymc: _this.belongEnterprise,
+								gh: _this.jobNumber,
+								rzrq: _this.entryTime,
+								xl: _this.qualification,
+								xw: _this.degree,
+								byxx: _this.graduateSchool,
+								bysj: _this.graduateTime,
+								sxzz: _this.graduateMajor,
+								id: _this.userInfo.id,
+								bmid: _this.departmentId,
+								zw: _this.dutyId,
+								gddh: _this.telNumber
+							},
+							type: 'POST',
+							async: false,
+							dataType: 'json',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								if(data && data.success) {
+									mui.toast("修改成功！");
+									setTimeout(function(){
+										mui.openWindow({
+											url: "login.html",
+											createNew: true,
+											show: {
+												aniShow: 'slide-in-left'
+											}
+										})
+									},800)
+								};
+							},
+							error: function(xhr, type, errorThrown) {
+								mui.toast(errorThrown);
+							}
+						})
+					},
+					getEnterprises: function() {         //拿到企业信息
+						var _this = this;
+						mui.ajax(CONSTANT.baseUrl + 'mobile/user/selectQyxx', {
+							data: {},
+							dataType: 'json',
+							type: 'POST',
+							async: false,
+							timeout: 10000,
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								if(data.data.length > 0) {
+									for(var i = 0; i < data.data.length; i++) {
+										_this.enterprisesData[i] = {};
+										_this.enterprisesData[i].text = data.data[i].qymc;
+										_this.enterprisesData[i].value = data.data[i].id;
+									}
+									_this.enterprisesData.unshift({
+										value: '',
+										text: '请选择'
+									})
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log('接口请求失败');
+							}
+						})
+					},
+					getDepartment: function(id) {     //根据企业id获取部门信息
+						var _this = this;
+						_this.departmentData = [];
+						_this.department = '';
+						mui.ajax(CONSTANT.baseUrl + 'mobile/user/get/byid?id=' + id, {
+							dataType: 'json',
+							type: 'GET',
+							async: false,
+							timeout: 10000, 
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								if(data.data.length > 0) {
+									for(var i = 0; i < data.data.length; i++) {
+										_this.departmentData[i] = {};
+										_this.departmentData[i].text = data.data[i].bmmc;
+										_this.departmentData[i].value = data.data[i].id;
+									}
+									console.log(_this.departmentData)
+									_this.departmentData.unshift({
+										value: '',
+										text: '请选择'
+									})
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log('接口请求失败');
+							}
+						})
+					},
+					getDuties: function(id) {           //根据企业id获取职位信息
+						var _this = this;
+						_this.dutiesData = [];
+						_this.duty = '';
+						mui.ajax(CONSTANT.baseUrl + 'mobile/user/zw?id=' + id, {
+							dataType: 'json',
+							type: 'GET',
+							async: false,
+							timeout: 10000,
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							success: function(data) {
+								if(data.data.length > 0) {
+									for(var i = 0; i < data.data.length; i++) {
+										_this.dutiesData[i] = {}
+										_this.dutiesData[i].text = data.data[i].zwmc
+										_this.dutiesData[i].value = data.data[i].id
+									}
+									_this.dutiesData.unshift({
+										value: '',
+										text: '请选择'
+									})
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log('接口请求失败');
+							}
+						})
+					},
+					chooseEnterprise: function() { //选择企业
+						var _this = this;
+						_this.enterprisePicker.setData(_this.enterprisesData);
+						if(_this.enterprisesData.length > 0) {
+							_this.enterprisePicker.show(function(items) {
+								if(!items[0].value) {
+									_this.belongEnterprise = ''
+								} else {
+									_this.belongEnterprise = items[0].text;
+								}
+								_this.enterpriseId = items[0].value
+								_this.getDepartment(_this.enterpriseId);
+								_this.getDuties(_this.enterpriseId);
+							})
+						}
+
+					},
+					chooseDepartment: function() { //选择部门
+						var _this = this;
+						if(!_this.belongEnterprise) {
+							mui.toast('请先选择所属企业！')
+						}
+						var departmentPicker = new mui.PopPicker();
+						departmentPicker.setData(_this.departmentData);
+						if(_this.departmentData.length > 0) {
+							departmentPicker.show(function(items) {
+								if(!items[0].value) {
+									_this.department = '';
+								} else {
+									_this.department = items[0].text;
+								}
+								_this.departmentId = items[0].value;
+							})
+						}
+					},
+					chooseDuty: function() { //选择职位
+						var _this = this;
+						if(!_this.belongEnterprise) {
+							mui.toast('请先选择所属企业！')
+						}
+						var dutyPicker = new mui.PopPicker();
+						dutyPicker.setData(_this.dutiesData);
+						if(_this.dutiesData.length > 0) {
+							dutyPicker.show(function(items) {
+								if(!items[0].value) {
+									_this.duty = ''
+								} else {
+									_this.duty = items[0].text;
+								}
+								_this.dutyId = items[0].value;
+							})
+						}
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

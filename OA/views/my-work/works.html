@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>我的工作</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/css/mui.picker.all.css" />
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<link rel="stylesheet" href="../../css/oa.css" />
+		<style>
+
+		</style>
+	</head>
+
+	<body>
+		<div id="myWork">
+
+			<oa-tab :nav="navList" :scroll="false" :data.sync="c.list">
+				<oa-drag :data.sync="c.list" style="top:44px">
+					<my-list :data.sync="c.list"></my-list>
+				</oa-drag>
+			</oa-tab>
+
+		</div>
+
+		<script src="../../../common/js/mui.js"></script>
+		<script src="../../../common/js/mui.picker.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script src="../../js/works.js"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#myWork',
+				data: {
+
+					//中央数据总线
+					c: {
+						//列表数据
+						list: [],
+						//api
+						api: '',
+						//页面
+						page:1,
+						//总页码
+						totalPage: 1,
+					},
+
+					//导航
+					navList: {
+						index: 1,
+						tabs: [{
+							api: {
+								url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+								type: 'POST',
+								data: {
+									minScopeKssj: new Date(),
+									maxScopeJssj: new Date()
+								}
+							},
+							txt: '当天',
+							icon: 'icon-shanchu'
+						}, {
+							api: {
+								url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+								type: 'POST',
+								data: {
+									minScopeKssj: new DateUtils().getWeekStartDate(),
+									maxScopeJssj: new DateUtils().getWeekEndDate()
+								}
+							},
+							txt: '本周',
+							icon: 'icon-tishi'
+						}, {
+							api: {
+								url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+								type: 'POST',
+								data: {
+									minScopeKssj: new DateUtils().getMonthStartDate(),
+									maxScopeJssj: new DateUtils().getMonthEndDate()
+								}
+							},
+							txt: '本月',
+							icon: 'icon-copy'
+						}, {
+							api: {
+								url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+								type: 'POST',
+								data: {}
+							},
+							txt: '全部',
+							icon: 'icon-edit'
+						}, ]
+					}
+
+				}
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>我的工作</title>
+		<link rel="stylesheet" href="../../../common/css/mui.min.css">
+		<link rel="stylesheet" href="../../../common/css/base.css">
+		<link rel="stylesheet" href="../../../common/css/mui.picker.all.css" />
+		<link rel="stylesheet" href="../../../common/iconfont/iconfont.css">
+		<link rel="stylesheet" href="../../css/oa.css" />
+		<style>
+
+		</style>
+	</head>
+
+	<body>
+		<div id="myWork">
+			<!--头部-->
+			<oa-header title='我的工作' url=''></oa-header>
+
+			<section class="mui-content">
+
+				<!-- 列表区 -->
+				<div class="list-box">
+
+					<oa-tab :nav="['当天', '本周', '本月', '全部']" :scroll="false">
+						
+						<oa-searchbar slot="bar"></oa-searchbar>
+						
+						<oa-list :items="tab1" :info.sync="tab1.list" slot="0">
+							<my-list :items="tab1"></my-list>
+						</oa-list>
+
+						<oa-list :items="tab2" :info.sync="tab2.list" slot="1">
+							<my-list :items="tab2"></my-list>
+						</oa-list>
+
+						<oa-list :items="tab3" :info.sync="tab3.list" slot="2">
+							<my-list :items="tab3"></my-list>
+						</oa-list>
+
+						<oa-list :items="tab4" :info.sync="tab4.list" slot="3">
+							<my-list :items="tab4"></my-list>
+						</oa-list>
+
+					</oa-tab>
+				</div>
+
+			</section>
+
+		</div>
+
+		<script src="../../../common/js/mui.min.js"></script>
+		<script src="../../../common/js/mui.picker.min.js"></script>
+		<script src="../../../common/js/vue.js"></script>
+		<script src="../../../common/js/base.js"></script>
+		<script src="../../../common/js/utils.js"></script>
+		<script src="../../../common/js/mui.pullToRefresh.js"></script>
+		<script src="../../../common/js/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/oa-components.js"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#myWork',
+				data: {
+					//tab列表数据
+
+					//当天
+					tab1: {
+						api: {
+							url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+							type: 'POST',
+							data: {
+								minScopeKssj: new Date(),
+								maxScopeJssj: new Date()
+							}
+						},
+						list: []
+					},
+
+					//本周
+					tab2: {
+						api: {
+							url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+							type: 'POST',
+							data: {
+								minScopeKssj: new DateUtils().getWeekStartDate(),
+								maxScopeJssj: new DateUtils().getWeekEndDate()
+							}
+						},
+						list: []
+					},
+
+					//本月
+					tab3: {
+						api: {
+							url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+							type: 'POST',
+							data: {
+								minScopeKssj: new DateUtils().getMonthStartDate(),
+								maxScopeJssj: new DateUtils().getMonthEndDate()
+							}
+						},
+						list: []
+					},
+
+					//全部
+					tab4: {
+						api: {
+							url: CONSTANT.baseUrl + 'mobile/gzrw/getMyWork',
+							type: 'POST',
+							data: {}
+						},
+						list: []
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>
